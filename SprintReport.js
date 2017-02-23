@@ -23,5 +23,70 @@ Ext.define('SprintReportApp', {
 
     _onDataLoaded: function(store, data) {
 
+    },
+
+        var records = _.map(data, function(record) {
+            //Perform custom actions with the data here
+            //Calculations, etc.
+            return Ext.apply({
+                TaskCount: record.get('Tasks').Count
+            }, record.getData());
+        });
+
+        this.add({
+            xtype: 'rallygrid',
+            showPagingToolbar: false,
+            showRowActionsColumn: false,
+            editable: false,
+            store: Ext.create('Rally.data.custom.Store', {
+                data: records
+            }),
+            columnCfgs: [
+                {
+                    text: 'Feature',
+                    dataIndex: 'Feature',
+                },
+                {
+                    xtype: 'templatecolumn',
+                    text: 'ID',
+                    dataIndex: 'FormattedID',
+                    width: 100,
+                    tpl: Ext.create('Rally.ui.renderer.template.FormattedIDTemplate')
+                },
+                {
+                    text: 'Name',
+                    dataIndex: 'Name',
+                    flex: 1
+                },
+                {
+                    text: 'Schedule State',
+                    dataIndex: 'ScheduleState'
+                },
+                {
+                    text: 'Points',
+                    dataIndex: 'PlanEstimate'
+                },
+                {
+                    text: 'Planned/Added',
+                    dataIndex: 'Added'
+                },
+                {
+                    text: '# of Tasks',
+                    dataIndex: 'TaskCount'
+                },
+                {
+                    text: '# of Defects',
+                    dataIndex: 'Defects',
+                    renderer: function(value) {
+                        return value.Count;
+                    }
+                },
+                {
+                    text: 'Review Feedback',
+                    dataIndex: 'Notes'
+                }
+            ]
+        });
+    // --- end create the feature/story table
     }
 });
