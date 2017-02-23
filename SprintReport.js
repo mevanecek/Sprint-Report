@@ -25,6 +25,7 @@ Ext.define('SprintReportApp', {
 
     },
 
+    _loadFeatureStoryTable: function(store, data) {
         var records = _.map(data, function(record) {
             //Perform custom actions with the data here
             //Calculations, etc.
