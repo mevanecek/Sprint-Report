@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sprint Report</title>
+
+    <script type="text/javascript" src="https://rally1.rallydev.com/apps/2.1/sdk.js"></script>
+
+    <script type="text/javascript">
+        Rally.onReady(function () {
+                Ext.define("SprintReportApp",{extend:"Rally.app.App",componentCls:"app",launch:function(){this.iterationCombobox=this.add({xtype:"rallyiterationcombobox"}),Ext.create("Rally.data.wsapi.Store",{model:"userstory",autoLoad:!0,listeners:{load:this._onDataLoaded,scope:this},fetch:["ObjectID","FormattedID","Name","ScheduleState","PlanEstimate","Parent","Project","Notes","Tasks","Defects","State","Estimate","ToDo","Actuals"]})},_onDataLoaded:function(store,data){}});
+
+            Rally.launchApp('SprintReportApp', {
+                name:"Sprint Report",
+	            parentRepos:""
+            });
+
+        });
+    </script>
+
+
+    <style type="text/css">
+        
+    </style>
+</head>
+<body>
+</body>
+</html>
