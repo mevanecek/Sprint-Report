@@ -1,11 +1,35 @@
 Ext.define('SprintReportApp', {
     extend: 'Rally.app.App',
     componentCls: 'app',
+    items: [
+        {
+            xtype: 'container',
+            itemId: 'menuBar'
+        },
+        {
+            xtype: 'container',
+            itemId: 'header'
+        },
+        {
+            xtype: 'container',
+            itemId: 'body'
+        }
+    ],
+    layout: {
+        type: 'vbox',
+        align: 'stretch'
+    },
+    stories: null,
 
     launch: function() {
 
-        this.iterationCombobox = this.add({
+        this.iterationCombobox = this.down('#header').add({
             xtype: 'rallyiterationcombobox'
+        });
+
+        this.down('#menuBar').add({
+            xtype: 'rallybutton',
+            text: 'Button!'
         });
 
         Ext.create('Rally.data.wsapi.Store', {
@@ -22,20 +46,33 @@ Ext.define('SprintReportApp', {
     },
 
     _onDataLoaded: function(store, data) {
-         this._loadFeatureStoryTable(store,data);
+         this.stories = this._loadStoryRecords(store,data);
+         this._loadFeatureStoryTable();
+         this._loadStoriesDefects();
     },
 
-    _loadFeatureStoryTable: function(store, data) {
-        var records = _.map(data, function(record) {
-            //Perform custom actions with the data here
-            //Calculations, etc.
-            return Ext.apply({
-                FeatureName: record.get('Feature').Name,
-                TaskCount: record.get('Tasks').Count
-            }, record.getData());
+    _loadStoriesDefects: function() {
+        this.down('#body').add({
+            xtype: 'rallygrid',
+            columnCfgs: [
+                'FormattedID',
+                'Name',
+                'ScheduleState',
+                'Owner'
+            ],
+            context: this.getContext(),
+            storeConfig: {
+                models: ['userstory', 'defect']
+            }
         });
+    },
 
-        this.add({
+//    _loadFeatureStoryTable: function(store, data) {
+    _loadFeatureStoryTable: function() {
+        // var records = this._loadStoryRecords(store, data);
+        var records = this.stories;
+
+        this.down('#header').add({
             xtype: 'rallygrid',
             showPagingToolbar: false,
             showRowActionsColumn: false,
@@ -98,5 +135,19 @@ Ext.define('SprintReportApp', {
             ]
         });
     // --- end create the feature/story table
+    },
+
+    _loadStoryRecords: function(store, data) {
+         var records = _.map(data, function(record) {
+            //Perform custom actions with the data here
+            //Calculations, etc.
+            return Ext.apply({
+               FeatureName: record.get('Feature').Name,
+               TaskCount: record.get('Tasks').Count
+            }, record.getData());
+         });
+
+         return records;
     }
+
 });
