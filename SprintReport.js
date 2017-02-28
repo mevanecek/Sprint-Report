@@ -35,6 +35,7 @@ Ext.define('SprintReportApp', {
         Ext.create('Rally.data.wsapi.Store', {
             model: 'userstory',
             autoLoad: true,
+            limit: "Infinity",
             listeners: {
                 load: this._onDataLoaded,
                 scope: this
@@ -42,6 +43,7 @@ Ext.define('SprintReportApp', {
             fetch: ['ObjectID', 'FormattedID', 'Name', 'ScheduleState', 'PlanEstimate', 'Parent', 'Feature',
                     'Project', 'Notes', 'Tasks', 'Defects', 'State', 'Estimate', 'ToDo', 'Actuals']
         });
+
     //API Docs: https://help.rallydev.com/apps/2.1/doc/
     },
 
@@ -49,6 +51,7 @@ Ext.define('SprintReportApp', {
          this.stories = this._loadStoryRecords(store,data);
          this._loadFeatureStoryTable();
          this._loadStoriesDefects();
+         this._addDateFields();
     },
 
     _loadStoriesDefects: function() {
@@ -148,6 +151,22 @@ Ext.define('SprintReportApp', {
          });
 
          return records;
-    }
+    },
 
+    _addDateFields: function() {
+        var filterPanel = Ext.create('Ext.panel.Panel', {
+            bodyPadding: 5,  // Don't want content to crunch against the borders
+            width: 300,
+            title: 'Filters',
+            items: [{
+                xtype: 'datefield',
+                fieldLabel: 'Start date'
+            }, {
+                xtype: 'datefield',
+                fieldLabel: 'End date'
+            }],
+            renderTo: Ext.getBody()
+        });
+        this.down("#body").add(filterPanel);
+    }
 });
