@@ -1,0 +1,76 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXFileReference section */
+		51B3FAAC1E672664000B3E9C /* SprintReport.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = SprintReport.js; path = ../SprintReport.js; sourceTree = "<group>"; };
+		51B3FAAD1E673868000B3E9C /* SprintReportMetricsRow.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = SprintReportMetricsRow.js; path = ../SprintReportMetricsRow.js; sourceTree = "<group>"; };
+		51B3FAAE1E675D2F000B3E9C /* StoryMetricStories.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = StoryMetricStories.js; path = ../StoryMetricStories.js; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		51B3FAA51E67262D000B3E9C = {
+			isa = PBXGroup;
+			children = (
+				51B3FAAE1E675D2F000B3E9C /* StoryMetricStories.js */,
+				51B3FAAC1E672664000B3E9C /* SprintReport.js */,
+				51B3FAAD1E673868000B3E9C /* SprintReportMetricsRow.js */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXProject section */
+		51B3FAA61E67262D000B3E9C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0820;
+			};
+			buildConfigurationList = 51B3FAA91E67262D000B3E9C /* Build configuration list for PBXProject "Sprint Report" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 51B3FAA51E67262D000B3E9C;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		51B3FAAA1E67262D000B3E9C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		51B3FAAB1E67262D000B3E9C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		51B3FAA91E67262D000B3E9C /* Build configuration list for PBXProject "Sprint Report" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				51B3FAAA1E67262D000B3E9C /* Debug */,
+				51B3FAAB1E67262D000B3E9C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 51B3FAA61E67262D000B3E9C /* Project object */;
+}

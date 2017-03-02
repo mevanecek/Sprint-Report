@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "4972882C28F335D4457649837A5665A4DD6DF8D5",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "03044C7A1135C69708473AE7A288ECC063F07C4B" : 9223372036854775807,
+    "4972882C28F335D4457649837A5665A4DD6DF8D5" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "5C1D2C32-F63B-4FAD-B6BC-787D9661B029",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "03044C7A1135C69708473AE7A288ECC063F07C4B" : "RallyApps\/app-catalog\/",
+    "4972882C28F335D4457649837A5665A4DD6DF8D5" : "Sprint-Report\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "RallyAppsSprintReport",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "RallyAppsSprintReport.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/RallyApps\/app-catalog.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "03044C7A1135C69708473AE7A288ECC063F07C4B"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/mevanecek\/Sprint-Report.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "4972882C28F335D4457649837A5665A4DD6DF8D5"
+    }
+  ]
+}

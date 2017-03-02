@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:Sprint Report/Sprint Report.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:deploy">
+   </FileRef>
+   <FileRef
+      location = "group:Images">
+   </FileRef>
+   <FileRef
+      location = "group:test">
+   </FileRef>
+   <FileRef
+      location = "group:README.md">
+   </FileRef>
+   <FileRef
+      location = "group:SprintReport.css">
+   </FileRef>
+   <FileRef
+      location = "group:Sprint Report Wire Frame.ai">
+   </FileRef>
+   <FileRef
+      location = "group:Sprint Report Wire Frame.pdf">
+   </FileRef>
+   <FileRef
+      location = "group:App-debug.html">
+   </FileRef>
+   <FileRef
+      location = "group:Gruntfile.js">
+   </FileRef>
+   <FileRef
+      location = "group:Layout.js">
+   </FileRef>
+   <FileRef
+      location = "group:SprintReport.html">
+   </FileRef>
+   <FileRef
+      location = "group:SprintReport.js">
+   </FileRef>
+   <FileRef
+      location = "group:config.json">
+   </FileRef>
+   <FileRef
+      location = "group:LICENSE">
+   </FileRef>
+   <FileRef
+      location = "group:package.json">
+   </FileRef>
+   <FileRef
+      location = "group:rally.bat">
+   </FileRef>
+   <FileRef
+      location = "group:../RallyApps/app-catalog">
+   </FileRef>
+</Workspace>
