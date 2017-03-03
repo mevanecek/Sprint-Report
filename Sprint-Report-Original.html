@@ -1,0 +1,1083 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- Copyright (c) 2010  Rally Software Development Corp.  All rights reserved -->
+<html>
+<head>
+    <title>Sprint Report</title>
+    <meta name="Name" content="Sprint Report"/>
+    <meta name="Version" content="1.01"/>
+    <meta name="Vendor" content="Rally Software"/>
+    <script type="text/javascript"
+        src="https://rally1.rallydev.com/apps/1.31/sdk.js">
+</script>
+    <script type="text/javascript">
+
+
+        // -------------------------------------------------------------------
+        // begin function processPlannedVsAdded()
+        function processPlannedVsAdded(rally_data_source, iteration_array) {
+            var rallyDataSource;
+            var iterations          = [ ];
+            var iterationMetrics    = [ ];
+            var groupedMetrics      = [ ];
+            var scheduleStates      = [ ];
+            var processedIterations = 0;
+            var processedIterationArtifacts = 0;
+            var processedArtifacts = [ ];
+            var processedCallback;
+
+            var skipDays = 1;
+            var artifactList = [ "defect", "hierarchicalrequirement" ];
+            var scheduledList = [ "Scheduled Defect", "Scheduled User Story" ];
+
+            function gatherIterationsMetrics() {
+                processedIterations = 0;
+                for (var i = 0; i < iterations.length; i++) {
+                    var q_key = "iteration";
+                    var query = iterationRevQuery(q_key, iterations[i].ObjectID);
+                    rallyDataSource.find(query, processIterationData);
+                }
+            }
+
+            function processIterationData(result) {
+                makeIterationMetric(result.iteration[0]);
+                processedIterations += 1;
+
+                if (processedIterations === iterations.length) {
+                    processedIterationArtifacts = 0;
+                    for (var i = 0; i < iterationMetrics.length; i++) {
+                        getIterationArtifacts(i);
+                    }
+                }
+            }
+
+            function makeIterationMetric(iteration) {
+                var metric = {
+                    ObjectID: iteration.ObjectID,
+                    UnfinishedAddedWork: 0,
+                    FinishedAddedWork: 0,
+                    FinishedNormalWork: 0,
+                    UnfinishedNormalWork: 0,
+                    AddedWork: [ ],
+                    AllWork: [ ],
+                    Name: iteration.Name,
+                    EndDate: iteration.EndDate
+                };
+                var newlen = iterationMetrics.push(metric);
+                //processIterationWork fills an array of added workproducts that getIterationArtifacts uses to query for more info
+                processIterationWork(iteration, newlen - 1);
+            }
+
+            //Parse the rev Hx of the iteration to find added artifacts after the skipDays value eg startDate +1
+            function processIterationWork(iteration, iter_index) {
+                var itStart = rally.sdk.util.DateTime.fromIsoString(iteration.StartDate);
+                var itStartOffset = rally.sdk.util.DateTime.add(itStart, "day", skipDays);
+
+                for (var i = 0; i < iteration.RevisionHistory.Revisions.length; i++) {
+                    var revDesc = iteration.RevisionHistory.Revisions[i].Description;
+                    var revDate = rally.sdk.util.DateTime.fromIsoString(iteration.RevisionHistory.Revisions[i].CreationDate);
+
+                    for (var k = 0; k < scheduledList.length; k++) {
+                        var changes = revDesc.split(scheduledList[k]);
+                        if (changes.length > 1) {
+                            for (var chgi = 1; chgi < changes.length; chgi++) {
+                                var changestr = changes[chgi];
+                                if (changestr.slice(1, 6) === "Suite") {
+                                    continue;
+                                }
+                                var firstBracket = changestr.indexOf("[");
+                                var firstColon = changestr.indexOf(":");
+                                var formattedID = changestr.slice(firstBracket + 1, firstColon);
+                                var info = artifactList[k] + "|" + formattedID;
+                                if (revDate > itStartOffset) {
+                                    iterationMetrics[iter_index].AddedWork.push(formattedID);
+                                }
+                                iterationMetrics[iter_index].AllWork.push(info);
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            function getIterationArtifacts(iteration_index) {
+                var queryArray = [ ];
+                for (var i = 0; i < iterationMetrics[iteration_index].AllWork.length; i++) {
+                    var info = iterationMetrics[iteration_index].AllWork[i].split("|");
+                    var type = info[0];
+                    var formattedID = info[1];
+                    queryArray.push(plannedItemQuery(type, type + "-" + formattedID, formattedID));
+                }
+                rallyDataSource.findAll(queryArray, processIterationArtifacts);
+            }
+
+
+            function processIterationArtifacts(result) {
+                processedIterationArtifacts += 1;
+
+                for (var key in result) {
+                    if (result.hasOwnProperty(key)) {
+                        if ((key === "errors") || (key === "warnings")) {
+                            continue;
+                        }
+
+                        // MIKE - working around issue where code was passing null for some reason
+                        if (result[key][0] != null) {
+                            addArtifactToIterations(result[key][0]);
+                        };
+                    }
+                }
+
+                if (processedIterationArtifacts === processedIterations) {
+                    groupIterations();
+                }
+            }
+
+
+            function addArtifactToIterations(artifact) {
+                if (dojo.indexOf(processedArtifacts, artifact.FormattedID) > -1) {
+                    return;
+                }
+                //if (processedArtifacts.indexOf(artifact.FormattedID) > -1) { return; }
+                processedArtifacts.push(artifact.FormattedID);
+                var planEst     = artifact.PlanEstimate;
+                var schedState  = artifact.ScheduleState;
+                var formattedID = artifact.FormattedID;
+                var schedIteration = "-1";
+                if (artifact.Iteration !== null) {
+                    schedIteration = artifact.Iteration.ObjectID;
+                }
+                var info = artifact._type.toLowerCase() + "|" + formattedID;
+
+                for (var i = 0; i < iterationMetrics.length; i++) {
+                    var iterationOID = iterationMetrics[i].ObjectID;
+                    if (dojo.indexOf(iterationMetrics[i].AllWork, info) > -1) {
+                        //if (iterationMetrics[i].AllWork.indexOf(info) > -1 ) {
+                        //story is in iteration so check it's status
+                        if (iterationOID == schedIteration) {
+                            if (dojo.indexOf(iterationMetrics[i].AddedWork, formattedID) > -1) {
+                                //if (iterationMetrics[i].AddedWork.indexOf(formattedID) > -1) {
+                                if ((schedState === "Accepted") || (schedState === scheduleStates[schedState.length - 1])) {
+                                    iterationMetrics[i].FinishedAddedWork += planEst;
+                                } else {
+                                    iterationMetrics[i].UnfinishedAddedWork += planEst;
+                                }
+                            } else {
+                                if ((schedState === "Accepted") || (schedState === scheduleStates[schedState.length - 1])) {
+                                    iterationMetrics[i].FinishedNormalWork += planEst;
+                                } else {
+                                    iterationMetrics[i].UnfinishedNormalWork += planEst;
+                                }
+                            }
+                        } else { //Story was in iteration, but must have been moved
+                            //if (iterationMetrics[i].AddedWork.indexOf(formattedID) > -1) { iterationMetrics[i].UnfinishedAddedWork += planEst; }
+                            if (dojo.indexOf(iterationMetrics[i].AddedWork, formattedID) > -1) {
+                                iterationMetrics[i].UnfinishedAddedWork += planEst;
+                            } else {
+                                iterationMetrics[i].UnfinishedNormalWork += planEst;
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            function iterationRevQuery(key, iteration_oid) {
+                var q = {
+                    type: "iteration",
+                    key: key,
+                    query: "( ObjectID = \"" + iteration_oid + "\" )",
+                    fetch: "FormattedID,Name,StartDate,EndDate,RevisionHistory,Revisions,Description,CreationDate"
+                };
+                return q;
+            }
+
+            function plannedItemQuery(type, key, formatted_id) {
+                var q = {
+                    type: type,
+                    key: key,
+                    query: "( FormattedID = \"" + formatted_id + "\" )",
+                    fetch: "ObjectID,PlanEstimate,ScheduleState,FormattedID,Iteration"
+                };
+                return q;
+            }
+
+            function groupIterations() {
+                //sort the iteration metrics array by end date
+                iterationMetrics.sort(function(a, b) {
+                        var dateA = rally.sdk.util.DateTime.fromIsoString(a.EndDate);
+                        var dateB = rally.sdk.util.DateTime.fromIsoString(b.EndDate);
+                        return dateA - dateB;
+                    });
+
+                groupedMetrics = [ ];
+                for (var i = 0; i < iterationMetrics.length; i++) {
+                    var metric = iterationMetrics[i];
+                    var found = false;
+                    for (var k = 0; k < groupedMetrics.length; k++) {
+                        if (metric.Name === groupedMetrics[k].Name) {
+                            found = true;
+                            groupedMetrics[k].UnfinishedAddedWork   += metric.UnfinishedAddedWork;
+                            groupedMetrics[k].FinishedAddedWork     += metric.FinishedAddedWork;
+                            groupedMetrics[k].FinishedNormalWork    += metric.FinishedNormalWork;
+                            groupedMetrics[k].UnfinishedNormalWork  += metric.UnfinishedNormalWork;
+                            groupedMetrics[k].AddedWork             = groupedMetrics[k].AddedWork.concat(metric.AddedWork);
+                        }
+                    }
+                    if (!found) {
+                        var new_group = {
+                            Name: metric.Name,
+                            UnfinishedAddedWork: metric.UnfinishedAddedWork,
+                            FinishedAddedWork: metric.FinishedAddedWork,
+                            FinishedNormalWork: metric.FinishedNormalWork,
+                            UnfinishedNormalWork: metric.UnfinishedNormalWork,
+                            EndDate: metric.EndDate,
+                            AddedWork: metric.AddedWork
+                        };
+                        groupedMetrics.push(new_group);
+                    }
+                }
+                processedCallback(groupedMetrics);
+            }
+
+            function getScheduleStates() {
+                var scheduleStates = {
+                    key: 'scheduleStates',
+                    type: 'Hierarchical Requirement',
+                    attribute: 'Schedule State'
+                };
+
+                rallyDataSource.findAll(scheduleStates, function(result) {
+                        scheduleStates = result.scheduleStates;
+                    });
+            }
+
+            this.processIterations = function(callback) {
+                processedCallback = callback;
+                gatherIterationsMetrics();
+            };
+
+            this.rawIterationMetrics = function() { return iterationMetrics; };
+
+            function init(rally_data_source, iteration_array) {
+                iterations = iteration_array;
+                rallyDataSource = rally_data_source;
+                getScheduleStates();
+            }
+
+            init(rally_data_source, iteration_array);
+        }
+        // end function processPlannedVsAdded()
+        // --------------------------------------------------------------
+
+
+</script>
+
+
+    <script type="text/javascript">
+        // <============================================================>
+        //
+        // <============== ITERATON REPORT java script =================>
+        //
+        // <============================================================>
+
+        // --- declare GLOBAL variables ---
+
+        // rally data source
+        var gRallyDataSource;
+
+        // stories returned for iteration
+        var gStories = new Array();
+
+        // iteration dropdown dialog
+        var gIterationDropdown;
+
+        // selected iteration data
+        var gIteration;
+        var gStartDate;
+        var gEndDate;
+
+        // capture iteration metrics returned
+        var gIterationMetrics = [ ];
+
+        // define all rally SDK tables & their div
+        var gTbStoryCntMetrics;
+        var gTbStoryPtsMetrics;
+        var gTbFeatStory;
+        var gTbTaskMetrics;
+        var gTbAllTasks;
+        var gTbDebug;
+
+
+        // -----------------------------------------------------
+        //
+        // ITERATION REPORT
+        //
+        // -----------------------------------------------------
+        function iterationReport() {
+
+
+            gRallyDataSource =
+                new rally.sdk.data.RallyDataSource(
+                '__WORKSPACE_OID__',
+                '__PROJECT_OID__',
+                '__PROJECT_SCOPING_UP__',
+                '__PROJECT_SCOPING_DOWN__');
+
+            /*
+            gRallyDataSource = 
+                    new rally.sdk.data.RallyDataSource(
+                                                "729424",	// Acme
+                                                "729701",	// Shopping Team
+                                                "true",
+                                                "true");
+            */
+            /*
+            gRallyDataSource = 
+                    new rally.sdk.data.RallyDataSource(
+                                                "729424",	// temp workspace
+                                                "1169875",	// temp project
+                                                "true",
+                                                "true");
+            */
+
+            function libCleanRallyTb(theTb) {
+
+                if (theTb != null) theTb.destroy();
+
+            }; // end libCleanRallyTb
+
+            function onIterationSelected() {
+
+                // clean out any old stuff from prior runs
+                gStories = [ ];
+
+                libCleanRallyTb(gTbAllTasks);
+                libCleanRallyTb(gTbStoryCntMetrics);
+                libCleanRallyTb(gTbStoryPtsMetrics);
+                libCleanRallyTb(gTbFeatStory);
+                libCleanRallyTb(gTbTaskMetrics);
+                libCleanRallyTb(gTbDebug);
+
+                dojo.empty(dojo.byId('iteration_info'));
+                dojo.empty(dojo.byId('story_count_metrics'));
+                dojo.empty(dojo.byId('story_points_metrics'));
+                dojo.empty(dojo.byId('task_metrics'));
+                dojo.empty(dojo.byId('feature_story_table'));
+                dojo.empty(dojo.byId('iteration_burndown_chart'));
+                dojo.empty(dojo.byId('velocity_chart'));
+                dojo.empty(dojo.byId('debug_table'));
+                dojo.empty(dojo.byId('all_sprint_tasks'));
+
+
+                // capture the selected iteration
+                gIteration = gIterationDropdown.getSelectedItem();
+
+
+                // add selected iteration OID that we will pass to iteration Metrics function
+                var iterationsInScope = [ ];
+                var anIteration = {
+                    ObjectID: 0
+                };
+                anIteration.ObjectID = gIterationDropdown.getSelectedOids();
+                iterationsInScope.push(anIteration);
+
+
+                // process stories in iteration looking for planned vs added
+                var iterationMetrics = new processPlannedVsAdded(gRallyDataSource, iterationsInScope);
+                iterationMetrics.processIterations(processIterationMetrics);
+
+            } // end function onIterationSelected()
+
+
+            // begin processIterationMetrics()
+            function processIterationMetrics(iterationMetrics) {
+
+                var queryStr;
+
+
+                // capture iteration metrics (planned vs added) in a global
+                gIterationMetrics = iterationMetrics;
+
+                /*
+                // DEBUGGING - debug results from processing iterations
+                // --- create & populate a debug table ---
+                var gTbCfgDebug = {
+                    columns: [
+                              {key: 'Variable'}, 
+                              {key: 'Value'}
+                              ]
+                };
+                */
+
+
+                // --- now lets grab all the stories from the iteration ---
+                // setup query string
+                queryStr = "(Iteration.Name = " + "\"" + gIterationDropdown.getSelectedName() + "\")";
+
+
+                // setup query
+                var queryObject = {
+                    key: 'stories',
+                    type: 'HierarchicalRequirement',
+                    query: queryStr,
+                    fetch: 'ObjectID,FormattedID,Name,ScheduleState,PlanEstimate,Parent,Project,Notes,Tasks,State,Estimate,ToDo,Actuals'
+                };
+
+                // execute query
+                gRallyDataSource.findAll(queryObject, bldSprintRpt);
+
+                // show iteration burndown chart
+                showIterationBurndownChart();
+
+                // render velocity chart
+                showVelocityChart();
+
+            };
+            // end processIterationMetrics()
+
+
+            // ------------------------------------------------------------------------------
+            // begin bldSprintRpt()
+            function bldSprintRpt(results) {
+
+                var nbrStories;
+                var nbrTasks;
+                var aStory;
+                var aTask;
+                var aParent;
+
+                var storyCntCompleted = 0;
+                var storyCntAccepted = 0;
+                var storyCntAdded = 0;
+                var storyPtsTotal = 0;
+                var storyPtsCompleted = 0;
+                var storyPtsAccepted = 0;
+                var storyPtsAdded = 0;
+
+                var taskHrsEstTotal = 0;
+                var taskHrsActTotal = 0;
+                var taskHrsToDoTotal = 0;
+
+                var aPctPlanned = 0;
+
+                var taskRowInfo;
+                var aRowInfo;
+
+
+                // write iteration detail
+                writeIterationDetails();
+
+
+                // create iteration tables to display iteration metrics toorally SDK tables
+                createIterationTables();
+
+
+                // calc count of added stories and added points
+                storyCntAdded = gIterationMetrics[0].AddedWork.length;
+                storyPtsAdded = gIterationMetrics[0].FinishedAddedWork + gIterationMetrics[0].UnfinishedAddedWork;
+
+
+                // ===> LOOP THROUGH ALL STORIES and TASKS <===
+
+                // localize stories
+                gStories = gStories.concat(results.stories);
+
+                // get # of stories
+                nbrStories = gStories.length;
+
+                // loop through each story
+                for (var storyNdx = 0; storyNdx < nbrStories; storyNdx++) {
+                    //for (var storyNdx = 0; storyNdx < 1; storyNdx++) {
+
+                    // localize the story
+                    aStory = gStories[storyNdx];
+
+                    storyPtsTotal += aStory.PlanEstimate;
+
+                    // CALC SPRINT POINT METRICS
+                    if (aStory.ScheduleState == "Completed") {
+                        storyCntCompleted += 1;
+                        storyPtsCompleted += aStory.PlanEstimate;
+                    }
+
+                    if (aStory.ScheduleState == "Accepted") {
+                        storyCntAccepted += 1;
+                        storyPtsAccepted += aStory.PlanEstimate;
+                    }
+
+
+                    // CHECK IF STORY WAS (VS PLANNED)
+                    var storyAdded = "Planned";
+                    for (var x = 0; x < storyCntAdded; x++) {
+
+                        var anAddedStory = gIterationMetrics[0].AddedWork[x];
+
+                        if (aStory.FormattedID == anAddedStory) {
+                            storyAdded = "Added";
+                        };
+
+                    };
+
+
+                    // CALC TASK METRICS
+                    nbrTasks = aStory.Tasks.length;
+
+                    for (var taskNdx = 0; taskNdx < nbrTasks; taskNdx++) {
+
+                        aTask = aStory.Tasks[taskNdx];
+
+                        // calculate sprint task metrics
+                        taskHrsEstTotal += aTask.Estimate;
+                        taskHrsActTotal += aTask.Actuals;
+                        taskHrsToDoTotal += aTask.ToDo;
+
+
+                        // add task to table
+
+                        taskRowInfo = {
+                            'Story Name': aStory.Name,
+                            'Schedule State': aStory.ScheduleState,
+                            'Plan Estimate': aStory.PlanEstimate,
+                            'Task Name': aTask.Name,
+                            'State': aTask.State,
+                            'Estimate': aTask.Estimate,
+                            'To Do': aTask.ToDo,
+                            'Actuals': aTask.Actuals
+                        };
+                        gTbAllTasks.addRow(taskRowInfo);
+
+                    };
+                    // end for each task
+
+                    // ADD FEATURE/STORY TABLE ROW
+                    // grab story's parent
+                    aParent = null;
+                    if (aStory.Parent != null) {
+                        aParent = aStory.Parent.Name
+                    };
+
+                    // populate full story row
+                    aRowInfo = {
+                        'Feature': aParent,
+                        'Story Name': aStory.Name,
+                        'Story ID': aStory.FormattedID,
+                        'Points': aStory.PlanEstimate,
+                        'Plan/Add': storyAdded,
+                        'Review Feedback': aStory.Notes,
+                        'Schedule State': aStory.ScheduleState
+                    };
+
+                    gTbFeatStory.addRow(aRowInfo);
+
+                };
+                // end for each story
+
+                // ===> END: LOOP THROUGH ALL STORIES and TASKS <===
+
+
+                // --- populate sprint STORY metrics ---
+
+                // --- begin populate story COUNT table ---
+                popStoryCntTb(nbrStories,
+                              storyCntAdded,
+                              storyCntCompleted,
+                              storyCntAccepted);
+
+                // --- begin populate story POINTS table ---
+                popStoryPtsTb(storyPtsTotal,
+                              storyPtsAdded,
+                              storyPtsCompleted,
+                              storyPtsAccepted);
+
+
+                // --- populate sprint TASK metrics ---
+
+                // populate planned task hours row
+                aRowInfo = {
+                    'Metric': "Planned Task Hours",
+                    'Value': taskHrsEstTotal
+                };
+                gTbTaskMetrics.addRow(aRowInfo);
+
+                // populate to-do task hours row
+                aRowInfo = {
+                    'Metric': "To-Do Task Hours",
+                    'Value': taskHrsToDoTotal
+                };
+                gTbTaskMetrics.addRow(aRowInfo);
+
+
+                // populate actual task hours row
+                aRowInfo = {
+                    'Metric': "Actual Task Hours",
+                    'Value': taskHrsActTotal
+                };
+                gTbTaskMetrics.addRow(aRowInfo);
+
+                // populate ratio of planned vs actual task hours row
+                if (taskHrsEstTotal > 0) {
+                    aPctPlanned = taskHrsActTotal / taskHrsEstTotal * 100;
+                    aPctPlanned = aPctPlanned.toFixed(0);
+                };
+
+
+                aRowInfo = {
+                    'Metric': "Actual / Planned",
+                    'Value': aPctPlanned + "%"
+                };
+                gTbTaskMetrics.addRow(aRowInfo);
+                // --- END populate sprint task metrics ---
+
+
+                // display all of the iteration tables which were just populated
+                displayIterationTables();
+
+
+
+            }; // end function bldSprintRpt()
+            // ------------------------------------------------------------------------------
+
+
+            // write all iteration details to page
+            function writeIterationDetails() {
+
+                var aSpan = dojo.create("mySpan", { style: 'color: black; font-size:13px' }, dojo.byId("iteration_info"));
+
+                gStartDate = rally.sdk.util.DateTime.format(gIteration.StartDate, "yyyy-MM-dd");
+                gEndDate = rally.sdk.util.DateTime.format(gIteration.EndDate, "yyyy-MM-dd");
+
+                dojo.create("span", { style: 'color: black', innerHTML: "Name: " }, aSpan);
+                dojo.create("span", { style: 'color: #25587E', innerHTML: gIteration.Name }, aSpan);
+                dojo.create('br', { }, aSpan);
+
+                dojo.create("span", { style: 'color: black', innerHTML: "Start Date: " }, aSpan);
+                dojo.create("span", { style: 'color: #25587E', innerHTML: gStartDate }, aSpan);
+                dojo.create('br', { }, aSpan);
+
+                dojo.create("span", { style: 'color: black', innerHTML: "End Date: " }, aSpan);
+                dojo.create("span", { style: 'color: #25587E', innerHTML: gEndDate }, aSpan);
+                dojo.create('br', { }, aSpan);
+
+                dojo.create('br', { }, aSpan);
+                dojo.create("span", { style: 'color: black', innerHTML: "Theme: " }, aSpan);
+                dojo.create('br', { }, aSpan);
+                if (gIteration.Theme != null) {
+                    dojo.create("span", { style: 'color: #25587E; font-size:11px', innerHTML: gIteration.Theme }, aSpan);
+                } else {
+                    dojo.create("span", { style: 'color: #25587E; font-size:11px', innerHTML: "No Theme Specified" }, aSpan);
+                };
+                dojo.create('br', { }, aSpan);
+
+            }; // end writeIterationDetails()
+            // ------------------------------------------------------------------------------
+
+
+            // create all the iteration tables (using the Rally SDK) that will later be populated and displayed
+            function createIterationTables() {
+
+                var tbCfgAllTasks;
+                var tbCfgStoryCntMetrics;
+                var tbCfgStoryPtsMetrics;
+                var tbCfgTaskMetrics;
+                var tbCfgFeatStory;
+
+
+                // --- create the iteration tasks table
+                tbCfgAllTasks = {
+                    columns: [ {
+                        key: 'Story Name' //,
+                        //width: "20%"
+                    }, {
+                        key: 'Schedule State',
+                        width: "4%"
+                    }, {
+                        key: 'Plan Estimate',
+                        width: "3%"
+                    }, {
+                        key: 'Task Name' //,
+                        //width: "20%"
+                    }, {
+                        key: 'State',
+                        width: "5%"
+                    }, {
+                        key: 'Estimate',
+                        width: "2%"
+                    }, {
+                        key: 'To Do',
+                        width: "2%"
+                    }, {
+                        key: 'Actuals',
+                        width: "2%"
+                    } ]
+                };
+                gTbAllTasks = new rally.sdk.ui.Table(tbCfgAllTasks);
+                // --- end create the iteration tasks table
+
+                // --- create the story count metrics table ---
+                tbCfgStoryCntMetrics = {
+                    columns: [
+                    {
+                        key: 'Metric',
+                        header: 'Story Point Metrics',
+                        width: 200
+                    },
+                    {
+                        key: 'Variable',
+                        header: 'Value',
+                        width: 60
+                    }
+                        ]
+                };
+                gTbStoryCntMetrics = new rally.sdk.ui.Table(tbCfgStoryCntMetrics);
+                // --- end create the story count metrics table ---
+
+
+                // --- create the story points metrics table ---
+                tbCfgStoryPtsMetrics = {
+                    columns: [
+                    {
+                        key: 'Metric',
+                        header: 'Story Point Metrics',
+                        width: 200
+                    },
+                    {
+                        key: 'Variable',
+                        header: 'Value',
+                        width: 60
+                    }
+                        ]
+                };
+
+                gTbStoryPtsMetrics = new rally.sdk.ui.Table(tbCfgStoryPtsMetrics);
+                // --- end create the story points metrics table ---
+
+
+                // --- create the task metrics table ---
+                tbCfgTaskMetrics = {
+                    columns: [
+                    {
+                        key: 'Metric',
+                        width: 200
+                    },
+                    {
+                        key: 'Value',
+                        width: 60
+                    }
+                        ]
+                };
+
+                gTbTaskMetrics = new rally.sdk.ui.Table(tbCfgTaskMetrics);
+                // --- end create the task metrics table ---
+
+
+                // create the feature/story table
+                tbCfgFeatStory = {
+                    columns: [ {
+                        key: 'Feature',
+                        width: "120"
+                    }, {
+                        key: 'Story Name',
+                        width: "150"
+                    }, {
+                        key: 'Story ID',
+                        width: "70"
+                    }, {
+                        key: 'Points',
+                        width: "40"
+                    }, {
+                        key: 'Plan/Add',
+                        width: "55"
+                    }, {
+                        key: 'Review Feedback',
+                        width: "270"
+                    }, {
+                        key: 'Schedule State',
+                        width: "90"
+                    } ]
+                };
+
+                gTbFeatStory = new rally.sdk.ui.Table(tbCfgFeatStory);
+                // --- end create the feature/story table
+
+            }; // end createIterationTables()
+            // ------------------------------------------------------------------------------
+
+
+            // display all the iteration table that were populated
+            function displayIterationTables() {
+
+                var aTbDivStoryCntMetrics = document.getElementById('story_count_metrics');
+                var aTbDivStoryPtsMetrics = document.getElementById('story_points_metrics');
+                var aTbDivTaskMetrics = document.getElementById('task_metrics');
+                var aTbDivFeatStory = document.getElementById('feature_story_table');
+                var aTbDivAllTasks = document.getElementById('all_sprint_tasks');
+                var aTbDivDebug = document.getElementById('debug_table');
+
+
+                // display story count metrics table
+                gTbStoryCntMetrics.display(aTbDivStoryCntMetrics);
+
+                // display story point metrics table
+                gTbStoryPtsMetrics.display(aTbDivStoryPtsMetrics);
+
+                // display task metrics table
+                gTbTaskMetrics.display(aTbDivTaskMetrics);
+
+                // display the feature/story table
+                gTbFeatStory.display(aTbDivFeatStory);
+
+                // display the populated main table (OR DON'T DISPLAY)
+                //gTbAllTasks.display(aTbDivAllTasks);
+
+
+            }; // end displayIterationTables()
+            // ------------------------------------------------------------------------------
+
+
+            // populate story COUNT table
+            function popStoryCntTb(theNbrStories,
+                                   theStoryCntAdded,
+                                   theStoryCntCompleted,
+                                   theStoryCntAccepted) {
+
+                var aRowInfo;
+
+                var aPctComp;
+
+
+                if (theNbrStories > 0) {
+                    aPctComp = (theStoryCntCompleted + theStoryCntAccepted) / theNbrStories * 100;
+                    aPctComp = aPctComp.toFixed(0);
+                } else aPctComp = 0;
+
+                aRowInfo = {
+                    'Metric': "# Stories Planned",
+                    'Variable': theNbrStories
+                };
+                gTbStoryCntMetrics.addRow(aRowInfo);
+
+                aRowInfo = {
+                    'Metric': "# Stories Added",
+                    'Variable': theStoryCntAdded
+                };
+                gTbStoryCntMetrics.addRow(aRowInfo);
+
+                aRowInfo = {
+                    'Metric': "# Stories Completed",
+                    'Variable': theStoryCntCompleted + theStoryCntAccepted
+                };
+                gTbStoryCntMetrics.addRow(aRowInfo);
+
+                aRowInfo = {
+                    'Metric': "# Stories Not Completed",
+                    'Variable': theNbrStories - theStoryCntCompleted - theStoryCntAccepted
+                };
+                gTbStoryCntMetrics.addRow(aRowInfo);
+
+                aRowInfo = {
+                    'Metric': "% Stories Completed",
+                    'Variable': aPctComp + "%"
+                };
+                gTbStoryCntMetrics.addRow(aRowInfo);
+
+
+            }; // end popStoryCntTb()
+            // ------------------------------------------------------------------------------
+
+
+            // populate story POINT table
+            function popStoryPtsTb(theStoryPtsTotal,
+                                   theStoryPtsAdded,
+                                   theStoryPtsCompleted,
+                                   theStoryPtsAccepted) {
+
+                var aRowInfo;
+
+                var aPctComp;
+
+
+                if (theStoryPtsTotal > 0) {
+                    aPctComp = (theStoryPtsCompleted + theStoryPtsAccepted) / theStoryPtsTotal * 100;
+                    aPctComp = aPctComp.toFixed(0);
+                } else aPctComp = 0;
+
+                aRowInfo = {
+                    'Metric': "# Story Points Planned",
+                    'Variable': theStoryPtsTotal
+                };
+                gTbStoryPtsMetrics.addRow(aRowInfo);
+
+                aRowInfo = {
+                    'Metric': "# Story Points Added",
+                    'Variable': theStoryPtsAdded
+                };
+                gTbStoryPtsMetrics.addRow(aRowInfo);
+
+                aRowInfo = {
+                    'Metric': "# Story Points Completed",
+                    'Variable': theStoryPtsCompleted + theStoryPtsAccepted
+                };
+                gTbStoryPtsMetrics.addRow(aRowInfo);
+
+                aRowInfo = {
+                    'Metric': "# Story Points Not Completed",
+                    'Variable': theStoryPtsTotal - theStoryPtsCompleted - theStoryPtsAccepted
+                };
+                gTbStoryPtsMetrics.addRow(aRowInfo);
+
+                aRowInfo = {
+                    'Metric': "% Story Points Completed",
+                    'Variable': aPctComp + "%"
+                };
+                gTbStoryPtsMetrics.addRow(aRowInfo);
+
+
+            }; // end popStoryPtsTb()
+            // ------------------------------------------------------------------------------
+
+
+            // show the iteration burndown chart
+            function showIterationBurndownChart() {
+
+                var cfgIterationBurndownChart = {
+                    report:		rally.sdk.ui.StandardReport.IterationBurndown,
+                    iterations:	gIterationDropdown.getSelectedOids(),
+                    width:		420,
+                    height:		260
+                };
+
+                var report = new rally.sdk.ui.StandardReport(cfgIterationBurndownChart);
+
+                report.display("iteration_burndown_chart");
+
+            }; // end function showIterationBurndownChart()
+            // ------------------------------------------------------------------------------
+
+
+            // show the velocity chart
+            function showVelocityChart() {
+
+                var cfgVelocityChart = {
+                    //width:		900,
+                    //height:		550,
+                    report: rally.sdk.ui.StandardReport.VelocityChart
+
+                };
+
+                var report = new rally.sdk.ui.StandardReport(cfgVelocityChart);
+
+                report.display("velocity_chart");
+
+            }; // end function showVelocityChart()
+            // ------------------------------------------------------------------------------
+
+
+            // setup iteration dropdown and capture user selection
+            function selectIteration() {
+
+                // setup iteration dropdown & display iteration metrics
+                var iterationDropdownConfig = { fetch: 'Theme' };
+                gIterationDropdown = new rally.sdk.ui.IterationDropdown(iterationDropdownConfig, gRallyDataSource);
+
+                gIterationDropdown.display("iteration_selection", onIterationSelected);
+
+            } // end selectIteration()
+            // ------------------------------------------------------------------------------
+
+
+            // call querying function
+            selectIteration();
+
+        }
+        // ----------------------------------------------
+        //
+        // end ITERATION REPORT
+        //
+        // ----------------------------------------------
+
+
+        rally.addOnLoad(iterationReport);
+
+</script>
+</head>
+<body>
+<div id="top">
+    <table border="0" width="41%" id="top_table">
+        <tr>
+        <td width="20%">
+        <div id="iteration_selection">
+        </div>
+        </td>
+        <td width="1%">
+        </td>
+        <td width="20%" align="right">
+        <form>
+            <input type="button" align="right" value="Print"
+                onClick="window.print()">
+        </form>
+        </td>
+        </tr>
+    </table>
+</div>
+
+<h2><em><strong>ITERATION INFO</strong></em></h2>
+<h4>
+<div id="iteration_info"></h4></div>
+ 
+<h2><em><strong>STORY METRICS</strong></em></h2>
+<div id="div_story_metrics">
+    <table border="0" id="story_metrics_main_table">
+        <tr>
+        <td>
+        <div id="story_count_metrics">
+        </div>
+        </td>
+        <td>
+        </td>
+        <td>
+        <div id="story_points_metrics">
+        </div>
+        </td>
+        </tr>
+    </table>
+</div>
+
+<h2><em><strong>TASK METRICS</strong></em></h2>
+<div id="div_task_metrics">
+    <table border="0" id="task_metrics_main_table">
+        <tr>
+        <td>
+        <div id="task_metrics">
+        </div>
+        </td>
+        </tr>
+    </table>
+</div>
+
+<div id="sprint_charts"
+    style="page-break-before:always; page-break-after:always">
+    <h2><em><strong>ITERATION BURNDOWN CHART</strong></em></h2>
+    <div id="iteration_burndown_chart">
+    </div>
+    <h2><em><strong>VELOCITY CHART</strong></em></h2>
+    <div id="velocity_chart">
+    </div>
+</div>
+<h2><em><strong>FEATURE/STORY TABLE</strong></em></h2>
+<div id="feature_story_table">
+</div>
+<!--<h2><em><strong>DEBUG TABLE</strong></em></h2>-->
+<div id="debug_table">
+</div>
+<!--<h2><em><strong>ALL SPRINT TASKS</strong></em></h2>-->
+<div id="all_sprint_tasks">
+</div>
+<br>
+<br>
+<form>
+    <input type="button" value="Print" onClick="window.print()">
+</form>
+</body>
+</html>
+
+

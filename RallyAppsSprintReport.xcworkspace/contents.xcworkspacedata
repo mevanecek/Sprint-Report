@@ -38,13 +38,19 @@
       location = "group:SprintReport.html">
    </FileRef>
    <FileRef
+       location = "group:Sprint-Report-Original.html">
+   </FileRef>
+   <FileRef
       location = "group:SprintReport.js">
    </FileRef>
    <FileRef
-      location = "group:Sprint Report/../SprintReportMetricsRow.js">
+      location = "group:SprintReportMetricsRow.js">
    </FileRef>
    <FileRef
-      location = "group:Sprint Report/../StoryMetricStories.js">
+       location = "group:SprintReportStoryTable.js"
+   </FileRef>
+   <FileRef
+      location = "group:StoryMetricStories.js">
    </FileRef>
    <FileRef
       location = "group:config.json">
