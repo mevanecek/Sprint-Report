@@ -2,10 +2,6 @@
 (function() {
     var Ext = window.Ext4 || window.Ext;
 
- var storyCount = 0;
- var storyPoints = 0;
- var storiesCompleted = 0;
- var storiesIncomplete = 0;
  
      Ext.define('SprintReportApp', {
         extend: 'Rally.app.App',
@@ -51,16 +47,15 @@
             this.metricsRow = this.down('#metricsrow').add({
                 xtype: 'sprintrepormetricsrow'
             });
-               
-            var storyTable = new StoryMetricStories();
-            this.metricsRow.items.getAt(0).add(storyTable);
-            
-            this._addDateFields();
-               
+
             var stories = Ext.create('Rally.data.wsapi.Store', {
                 model: 'userstory',
                 autoLoad: false,
                 limit: 'Infinity',
+                filters: {
+                    property: 'Iteration.Name',
+                    value: 'Sprint n'
+                },
                 listeners: {
                     load: this._onDataLoaded,
                     scope: this
@@ -73,8 +68,35 @@
         },
 
         _onDataLoaded: function(store, data) {
-             this.stories = this._loadStoryRecords(store,data);
-             this._loadFeatureStoryTable();
+            var storyCount = 0;
+            var storyPoints = 0;
+            var storiesAccepted = 0;
+            var storiesIncomplete = 0;
+            var storiesPercent = 0.00;
+            var storyPointsPercent = 0.00;
+            var storyPointsAccepted = 0;
+            
+            this.stories = this._loadStoryRecords(store,data);
+            
+            storyPoints = store.sum('PlanEstimate');
+            storyCount = store.count();
+            
+            store.data.each(function(item, index, totalItems ) {
+                //console.log(item.data ['FormattedID']);
+                if ('Accepted' === item.data['ScheduleState']) {
+                    storiesAccepted++;
+                    storyPointsAccepted += item.data['PlanEstimate'];
+                    console.log('Points accepted are %o', item.data);
+                }
+            });
+            
+            storiesIncomplete = storyCount - storiesAccepted;
+            storiesPercent = (storyCount > 0) ? Math.round((storiesAccepted/storyCount)*100) : 0.00;
+            storyPointsPercent = (storyPoints > 0) ? Math.round((storyPointsAccepted/storyPoints)*100) : 0.00;
+            console.log('Stories: %o\nPoints: %o\nAccepted: %o\nA Points: %o\nPercent: %o and %o\n',
+                        storyCount, storyPoints, storiesAccepted, storyPointsAccepted, storiesPercent, storyPointsPercent);
+            this._loadStoryMetrics(storyCount);
+            this._loadFeatureStoryTable();
         },
 
         _loadFeatureStoryTable: function() {
@@ -173,6 +195,12 @@
              return records;
         },
 
+        _loadStoryMetrics: function(numStories) {
+            var storyTable = new StoryMetricStories({ storyCount: numStories });
+            this.metricsRow.items.getAt(0).add(storyTable);
+                
+        },
+                
         _addDateFields: function() {
             var filterPanel = Ext.create('Ext.panel.Panel', {
                 bodyPadding: 5,  // Don't want content to crunch against the borders

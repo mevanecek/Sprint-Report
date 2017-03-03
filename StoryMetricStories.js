@@ -7,8 +7,9 @@
         cls: 'story-metric-stories',
         width: 250,
         height: 130,
+        storyCount: 0,
         layout: {
-        type: 'table',
+            type: 'table',
             // The total column count must be specified here
             columns: 2
         },
@@ -32,6 +33,7 @@
                 cellCls: 'metricData'
                },
                {
+                html: this.storyCount,
                 cellCls: 'metricData'
                },
                {
@@ -42,7 +44,7 @@
                 cellCls: 'metricData'
                },
                 {
-                html: '# Stories Completed:',
+                html: '# Stories Accepted:',
                 cellCls: 'metricData'
                 },
                 {

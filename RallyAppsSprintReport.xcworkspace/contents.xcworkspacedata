@@ -41,6 +41,12 @@
       location = "group:SprintReport.js">
    </FileRef>
    <FileRef
+      location = "group:Sprint Report/../SprintReportMetricsRow.js">
+   </FileRef>
+   <FileRef
+      location = "group:Sprint Report/../StoryMetricStories.js">
+   </FileRef>
+   <FileRef
       location = "group:config.json">
    </FileRef>
    <FileRef
