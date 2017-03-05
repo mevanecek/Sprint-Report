@@ -8,8 +8,11 @@
 
 /* Begin PBXFileReference section */
 		51B3FAAC1E672664000B3E9C /* SprintReport.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = SprintReport.js; path = ../SprintReport.js; sourceTree = "<group>"; };
-		51B3FAAD1E673868000B3E9C /* SprintReportMetricsRow.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = SprintReportMetricsRow.js; path = ../SprintReportMetricsRow.js; sourceTree = "<group>"; };
+		51B3FAAD1E673868000B3E9C /* SprintMetricsRow.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = SprintMetricsRow.js; path = ../SprintMetricsRow.js; sourceTree = "<group>"; };
 		51B3FAAE1E675D2F000B3E9C /* StoryMetricStories.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = StoryMetricStories.js; path = ../StoryMetricStories.js; sourceTree = "<group>"; };
+		51B3FAB01E6A4765000B3E9C /* SprintReportStoryTable.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = SprintReportStoryTable.js; path = ../SprintReportStoryTable.js; sourceTree = "<group>"; };
+		51B3FAB11E6A502F000B3E9C /* StoryGrid.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = StoryGrid.js; path = ../StoryGrid.js; sourceTree = "<group>"; };
+		51B3FAB21E6A61E0000B3E9C /* StoryStore.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = StoryStore.js; path = ../StoryStore.js; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -18,7 +21,10 @@
 			children = (
 				51B3FAAE1E675D2F000B3E9C /* StoryMetricStories.js */,
 				51B3FAAC1E672664000B3E9C /* SprintReport.js */,
-				51B3FAAD1E673868000B3E9C /* SprintReportMetricsRow.js */,
+				51B3FAAD1E673868000B3E9C /* SprintMetricsRow.js */,
+				51B3FAB11E6A502F000B3E9C /* StoryGrid.js */,
+				51B3FAB21E6A61E0000B3E9C /* StoryStore.js */,
+				51B3FAB01E6A4765000B3E9C /* SprintReportStoryTable.js */,
 			);
 			sourceTree = "<group>";
 		};

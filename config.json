@@ -4,7 +4,9 @@
     "server": "https://rally1.rallydev.com",
     "sdk": "2.1",
     "javascript": [
-        "SprintReportMetricsRow.js",
+        "SprintMetricsRow.js",
+        "StoryGrid.js",
+        "StoryStore.js",
         "StoryMetricStories.js",
         "SprintReport.js"
     ],

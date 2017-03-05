@@ -2,70 +2,54 @@
     var Ext = window.Ext4 || window.Ext;
 
     Ext.define('PepsiCo.app.sprintreport.StoryMetricStories', {
-        extend: 'Ext.panel.Panel',
+        extend: 'Ext.grid.Panel',
         alias: 'widget.storymetricstories',
         cls: 'story-metric-stories',
         width: 250,
-        height: 130,
-        storyCount: 0,
+        height: 150,
+        store: null,
+        labelColumnTitle: 'Item',
+        valueColumnTitle: 'Value',
+
         layout: {
-            type: 'table',
+            type: 'fit',
             // The total column count must be specified here
-            columns: 2
+            // columns: 2,
+            align: 'stretch',
+            pack: 'start'
         },
         defaults: {
             // applied to each contained panel
-            bodyStyle: 'padding:2px; font-size: 10px;'
+            bodyStyle: 'padding: 5px; font-size: 10px;'
         },
-        items: [
-        {
-            html: 'Story Count',
-            cellCls: 'metricHeader',
-            bodyStyle: 'color: blue; background-color: lightblue; font-size: 11px;'
+        columns: [
+            {
+                text: 'Item',
+                dataIndex: 'metricType',
+                flex: 4
+            },
+            {
+                text: 'Value',
+                dataIndex: 'metricValue',
+                flex: 1
+            }
+        ],
+        renderTo: Ext.getBody(),
+
+        constructor: function(config) {
+//            console.log("In the constructor, args = %o\n", config);
+            this.store = config.store;
+            this.labelColumnTitle = (config.labelColumnTitle === null) ? 'Item' : config.labelColumnTitle;
+            this.valueColumnTitle = (config.valueColumnTitle === null) ? 'Value' : config.valueColumnTitle;
+            this.callParent(arguments);
         },
-        {
-            html: 'Value',
-            cellCls: 'metricHeader',
-            bodyStyle: 'color: blue; background-color: lightblue; font-size: 11px;'
-        },
-        {
-            html: '# Stories Planned:',
-            cellCls: 'metricData'
-        },
-        {
-            html: this.storyCount,
-            cellCls: 'metricData'
-        },
-        {
-            html: '# Stories Added:',
-            cellCls: 'metricData'
-        },
-        {
-            cellCls: 'metricData'
-        },
-        {
-            html: '# Stories Accepted:',
-            cellCls: 'metricData'
-        },
-        {
-            cellCls: 'metricData'
-        },
-        {
-            html: '# Stories Incomplete:',
-            cellCls: 'metricData'
-        },
-        {
-            cellCls: 'metricData'
-        },
-        {
-            html: '% Stories Completed:',
-            cellCls: 'metricData'
-        },
-        {
-            cellCls: 'metricData'
+
+        initComponent: function() {
+//            console.log("Component initialized with %o\n", this.labelColumnTitle);
+            this.columns[0].text = this.labelColumnTitle;
+            this.columns[1].text = this.valueColumnTitle;
+            this.callParent();
         }
-            ],
-        renderTo: Ext.getBody()
     });
 })();
 
