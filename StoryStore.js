@@ -28,6 +28,9 @@
         isLoaded: false,
 
         store: null,
+        storeConfig: {
+            pageSize: 500
+        },
 
         mixins: {
             observable: 'Ext.util.Observable'
@@ -101,7 +104,7 @@
                return;
             }
 
-            this.storyRecords = this._loadStoryRecords(store, data);
+            this.records =      this._loadStoryRecords(store, data);
             this.storyCount = store.count();
             this.storyPoints = store.sum('PlanEstimate');
 
@@ -120,8 +123,6 @@
                 plan += (item.data['TaskEstimateTotal']) ? item.data['TaskEstimateTotal'] : 0;
                 todo += (item.data['TaskRemainingTotal']) ? item.data['TaskRemainingTotal'] : 0;
                 actual += (item.data['TaskActualTotal']) ? item.data['TaskActualTotal'] : 0;
-
-//                console.log('Iteration = %o\n', item.data['Iteration']);
             });
 
             this.plannedHours = plan;
@@ -136,11 +137,6 @@
 
             this.storiesPercent = (this.storyCount > 0) ? Math.round((this.storiesAccepted / this.storyCount) * 100) : 0.00;
             this.storyPointsPercent = (this.storyPoints > 0) ? Math.round((this.storyPointsAccepted / this.storyPoints) * 100) : 0.00;
-
-//            console.log('Stories: %o\nPoints: %o\nAccepted: %o\nA Points: %o\nPercent: %o and %o\n',
-//                this.storyCount, this.storyPoints, this.storiesAccepted, this.storyPointsAccepted, this.storiesPercent, this.storyPointsPercent);
-
-            this.records = this._loadStoryRecords(store, data);
 
             this.isLoaded = true;
             this.fireEvent('loaded');
@@ -178,7 +174,8 @@
         _getStoryRecordsStore: function() {
             var rawRecords = this._getStoryRecords();
             return Ext.create('Rally.data.custom.Store', {
-                data: rawRecords
+                data: rawRecords,
+                pageSize: rawRecords.length + 1
             });
         },
         
@@ -188,7 +185,6 @@
             }
             return this.records;
         },
-
     });
 
 

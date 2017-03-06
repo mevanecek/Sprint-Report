@@ -1,12 +1,73 @@
 .app {
      /* Add app styles here */
 }
+
+
+.sprint-report-story-grid {
+    padding-top: 15px;
+}
+
 td .metricHeader {
     color: blue;
     background-color: lightblue;
 }
-.x-table-layout-cell.metricData panel-1022-innerCt {
-    color: black;
-    background-color: whitesmoke;
-    font-size: 11px;
+
+.x-grid-header-ct {
+    border: 1px solid #000;
+    background-color: lightblue;
+    color: blue;
+    font-size: 125%;
+    font-weight: bold;
 }
+
+.x-grid-header-ct .x-box-inner {
+    border-bottom: 2px solid #000;
+    font-size: 125%;
+    font-weight: bold;
+}
+
+/* .x-grid-header-ct .x-box-inner .x-column-header-inner { border-right: 1px solid #000; }*/
+
+.metricsRowPanel {
+    color: wheat;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+
+.metricsRowPanel .x-panel-header {
+    border-color:#99bbe8;
+    background-color: darkblue;
+}
+
+.metricsRowPanel .x-header-text {
+    margin: 5px;
+    color: wheat;
+    font-weight: bold;
+    font-size: 110%;
+}
+
+.iterationInfoRow .x-panel-header {
+    border-color:#99bbe8;
+    background-color: darkblue;
+}
+
+.iterationInfoRow .x-header-text {
+    margin: 5px;
+    color: wheat;
+    font-weight: bold;
+    font-size: 110%;
+}
+
+.rally-grid .x-panel-header {
+    border-color:#99bbe8;
+    background-color: darkblue;
+}
+
+.rally-grid .x-header-text {
+    margin: 5px;
+    color: wheat;
+    font-weight: bold;
+    font-size: 110%;
+}
+
+/* x-header-text x-panel-header-text x-panel-header-text-default */

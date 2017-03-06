@@ -4,12 +4,16 @@
     Ext.define('PepsiCo.apps.sprintreport.SprintMetricsRow', {
         extend: 'Ext.panel.Panel',
         alias: 'widget.sprintrepormetricsrow',
-        cls: 'sprint-report-metrics-row',
+        cls: 'metricsRowPanel',
         width: 915,
-        height: 170,
+        height: 190,
         title: "Sprint Metrics",
-        border: 1,
+        border: 0,
         collapsible: true,
+        defaults: {
+            // applied to each contained panel
+            bodyStyle: 'padding: 5px; font-size: 10px;'
+        },
         layout: {
             type: 'hbox',
             align: 'stretch'

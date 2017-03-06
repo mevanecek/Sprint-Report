@@ -32,28 +32,28 @@
       location = "group:Gruntfile.js">
    </FileRef>
    <FileRef
-      location = "group:Layout.js">
-   </FileRef>
-   <FileRef
       location = "group:SprintReport.html">
    </FileRef>
    <FileRef
       location = "group:Sprint-Report-Original.html">
    </FileRef>
    <FileRef
+      location = "group:/Users/mattvanecek/Documents/CodeProjects/Sprint-Report/SprintMetricsRow.js">
+   </FileRef>
+   <FileRef
       location = "group:SprintReport.js">
    </FileRef>
    <FileRef
-      location = "group:/Users/mattvanecek/Documents/CodeProjects/Sprint-Report/SprintMetricsRow.js">
+      location = "group:/Users/mattvanecek/Documents/CodeProjects/Sprint-Report/IterationInfo.js">
    </FileRef>
    <FileRef
       location = "group:/Users/mattvanecek/Documents/CodeProjects/Sprint-Report/StoryGrid.js">
    </FileRef>
    <FileRef
-      location = "group:/Users/mattvanecek/Documents/CodeProjects/Sprint-Report/StoryStore.js">
+      location = "group:StoryMetricStories.js">
    </FileRef>
    <FileRef
-      location = "group:StoryMetricStories.js">
+      location = "group:/Users/mattvanecek/Documents/CodeProjects/Sprint-Report/StoryStore.js">
    </FileRef>
    <FileRef
       location = "group:config.json">

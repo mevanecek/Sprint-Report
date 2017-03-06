@@ -5,11 +5,11 @@
         extend: 'Ext.grid.Panel',
         alias: 'widget.storymetricstories',
         cls: 'story-metric-stories',
-        width: 250,
-        height: 150,
+        columnLines: true,
         store: null,
         labelColumnTitle: 'Item',
         valueColumnTitle: 'Value',
+        frame: true,
 
         layout: {
             type: 'fit',
@@ -37,15 +37,11 @@
         renderTo: Ext.getBody(),
 
         constructor: function(config) {
-//            console.log("In the constructor, args = %o\n", config);
-            this.store = config.store;
-            this.labelColumnTitle = (config.labelColumnTitle === null) ? 'Item' : config.labelColumnTitle;
-            this.valueColumnTitle = (config.valueColumnTitle === null) ? 'Value' : config.valueColumnTitle;
+            this.mergeConfig(config);
             this.callParent(arguments);
         },
 
         initComponent: function() {
-//            console.log("Component initialized with %o\n", this.labelColumnTitle);
             this.columns[0].text = this.labelColumnTitle;
             this.columns[1].text = this.valueColumnTitle;
             this.callParent();
