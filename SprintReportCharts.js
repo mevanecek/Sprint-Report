@@ -36,7 +36,6 @@
 
         constructor: function(config) {
             this.mergeConfig(config);
-
             this.mixins.observable.constructor.call(this, config);
             this.callParent(arguments);
         },
