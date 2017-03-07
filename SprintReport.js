@@ -133,7 +133,7 @@
         _createIterationInfo: function() {
             var row = Ext.create('PepsiCo.app.sprintreport.IterationInfo', {
                 title: 'Sprint Information:',
-                border: 1,
+                border: 0,
                 width: 915,
                 height: 150
             });
@@ -163,6 +163,7 @@
             var objIdArr = newValue.split('/');
             this.iterationObjId = objIdArr[objIdArr.length - 1];
 
+//            this.iterationInfoRow.removeAll();
             this.iterationInfoRow._setIterationId(this.iterationObjId);
             this.iterationInfoRow._fetchIteration();
 
