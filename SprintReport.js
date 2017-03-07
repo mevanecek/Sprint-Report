@@ -115,6 +115,7 @@
         stories: null,
         iterationInfoRow: null,
         metricsRow: null,
+        chartsRow: null,
         storyGrid: null,
         storyTable: null,
         storyPointsTable: null,
@@ -161,6 +162,10 @@
             // console.log('Iteration changed or loaded. Old = %o, new = %o\n', oldValue, newValue);
             var objIdArr = newValue.split('/');
             this.iterationObjId = objIdArr[objIdArr.length - 1];
+
+            this.iterationInfoRow._setIterationId(this.iterationObjId);
+            this.iterationInfoRow._fetchIteration();
+
             this._loadStoryData();
         },
 
