@@ -5,6 +5,7 @@
     "sdk": "2.1",
     "javascript": [
         "IterationInfo.js",
+        "SprintReportCharts.js",
         "SprintMetricsRow.js",
         "StoryGrid.js",
         "StoryStore.js",

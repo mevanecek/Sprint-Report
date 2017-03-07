@@ -9,7 +9,7 @@
         height: 190,
         title: "Sprint Metrics",
         border: 0,
-        collapsible: true,
+        collapsible: false,
         defaults: {
             // applied to each contained panel
             bodyStyle: 'padding: 5px; font-size: 10px;'

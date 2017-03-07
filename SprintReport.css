@@ -58,6 +58,18 @@ td .metricHeader {
     font-size: 110%;
 }
 
+.sprint-report-charts .x-panel-header {
+    border-color:#99bbe8;
+    background-color: darkblue;
+}
+
+.sprint-report-charts .x-header-text {
+    margin: 5px;
+    color: wheat;
+    font-weight: bold;
+    font-size: 110%;
+}
+
 .rally-grid .x-panel-header {
     border-color:#99bbe8;
     background-color: darkblue;

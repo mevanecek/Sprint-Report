@@ -126,13 +126,14 @@
 
             this._createMetricsRow();
             this._createIterationInfo();
+            this._createChartsRow();
             this._createIterationComboBox();
         },
 
         // Create and add the iteration information row
         _createIterationInfo: function() {
             var row = Ext.create('PepsiCo.app.sprintreport.IterationInfo', {
-                title: 'Sprint Information:',
+                title: 'Sprint Information',
                 border: 0,
                 width: 915,
                 height: 150
@@ -144,6 +145,17 @@
         _createMetricsRow: function() {
             var metrow = Ext.create('PepsiCo.apps.sprintreport.SprintMetricsRow',{});
             this.metricsRow = this.down('#metricsrow').add(metrow);
+        },
+
+        // Add the row for the charts that will be displayed
+        _createChartsRow: function() {
+             var row = Ext.create('PepsiCo.app.sprintreport.SprintReportCharts', {
+                 title: 'Progress',
+                 border: 0,
+                 width: 915,
+                 height: 210
+             });
+             this.chartsRow = this.down('#chartsrow').add(row);
         },
 
         // Add the IterationComboBox to the header, and set its listener.

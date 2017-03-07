@@ -13,8 +13,6 @@
 
         layout: {
             type: 'fit',
-            // The total column count must be specified here
-            // columns: 2,
             align: 'stretch',
             pack: 'start'
         },
