@@ -11,14 +11,19 @@
         items: [
         {
             xtype: 'panel',
-            border: 0,
+            border: 1,
             flex: 1,
+            title: 'Sprint Burndown',
+            layout: 'fit',
+            id: 'leftChartsPanelID',
             itemId: 'leftChartsPanel'
         },
         {
             xtype: 'panel',
-            border: 0,
+            border: 1,
             flex: 1,
+            layout: 'fit',
+            id: 'rightChartsPanelID',
             itemId: 'rightChartsPanel'
         }
             ],
@@ -40,9 +45,22 @@
             this.callParent(arguments);
         },
 
-        _load: function(store, data) {
+        _load: function() {
+            var iters = [ this.iteration ];
+            var iterBurn = Ext.create('Rally.ui.report.StandardReport', {
+                reportConfig: {
+                        report: 'IterationBurndown',
+                        iterations: iters,
+                        legend: 'show'
+                    },
+                width: 400,
+                height: 400
+                });
+            console.log("item 0 : %o\n", this.items.getAt(0));
+            this.items.getAt(0).add(iterBurn);
         },
 
+        /*
         _fetchIteration: function() {
 
             var iter = this.iteration;
@@ -65,7 +83,8 @@
             });
             this.store.load();
         },
-
+         */
+        
         _setIterationId: function(iter) {
             this.iteration = iter;
         }

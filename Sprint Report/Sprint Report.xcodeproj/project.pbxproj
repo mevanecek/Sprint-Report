@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
+		5101C1491E6F93D80000CC89 /* SprintReportCharts.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = SprintReportCharts.js; path = ../SprintReportCharts.js; sourceTree = "<group>"; };
 		516C2E461E6CE69A00E08C61 /* IterationInfo.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = IterationInfo.js; path = ../IterationInfo.js; sourceTree = "<group>"; };
 		51B3FAAC1E672664000B3E9C /* SprintReport.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = SprintReport.js; path = ../SprintReport.js; sourceTree = "<group>"; };
 		51B3FAAD1E673868000B3E9C /* SprintMetricsRow.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = SprintMetricsRow.js; path = ../SprintMetricsRow.js; sourceTree = "<group>"; };
@@ -20,6 +21,7 @@
 			isa = PBXGroup;
 			children = (
 				516C2E461E6CE69A00E08C61 /* IterationInfo.js */,
+				5101C1491E6F93D80000CC89 /* SprintReportCharts.js */,
 				51B3FAAE1E675D2F000B3E9C /* StoryMetricStories.js */,
 				51B3FAAC1E672664000B3E9C /* SprintReport.js */,
 				51B3FAAD1E673868000B3E9C /* SprintMetricsRow.js */,

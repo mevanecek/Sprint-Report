@@ -153,7 +153,7 @@
                  title: 'Progress',
                  border: 0,
                  width: 915,
-                 height: 210
+                 height: 310
              });
              this.chartsRow = this.down('#chartsrow').add(row);
         },
@@ -178,6 +178,10 @@
 //            this.iterationInfoRow.removeAll();
             this.iterationInfoRow._setIterationId(this.iterationObjId);
             this.iterationInfoRow._fetchIteration();
+
+            
+            this.chartsRow._setIterationId(this.iterationObjId);
+            this.chartsRow._load();
 
             this._loadStoryData();
         },
