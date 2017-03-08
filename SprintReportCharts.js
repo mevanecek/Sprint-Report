@@ -59,31 +59,6 @@
             console.log("item 0 : %o\n", this.items.getAt(0));
             this.items.getAt(0).add(iterBurn);
         },
-
-        /*
-        _fetchIteration: function() {
-
-            var iter = this.iteration;
-            if (!this.store) {
-                this.store = Ext.create('Rally.data.wsapi.Store', {
-                    model: 'Iteration',
-                    autoLoad: false,
-                    listeners: {
-                        load: this._load,
-                        scope: this
-                    },
-                    fetch: [
-                        'Name', 'StartDate', 'EndDate', 'Theme'
-                        ]
-                });
-            }
-            this.store.setFilter( {
-                property: 'ObjectID',
-                value: iter
-            });
-            this.store.load();
-        },
-         */
         
         _setIterationId: function(iter) {
             this.iteration = iter;
