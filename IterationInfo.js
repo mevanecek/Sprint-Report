@@ -26,7 +26,7 @@
             align: 'stretch'
         },
 
-        renderTo: Ext.getBody(),
+//        renderTo: Ext.getBody(),
 
         leftTemplate: new Ext.Template('<table style="margin-left: 25px;"><tr><td style="font-weight: bold;">Sprint:</td><td>{sprintName}</td></tr>' +
                                        '<tr><td style="font-weight: bold;">Start Date:</td><td>{startDate}</td></tr>' +
@@ -36,14 +36,14 @@
             store: null,
         iteration: null,
 
-        mixins: {
-            observable: 'Ext.util.Observable'
-        },
+//        mixins: {
+//            observable: 'Ext.util.Observable'
+//        },
 
         constructor: function(config) {
             this.mergeConfig(config);
 
-            this.mixins.observable.constructor.call(this, config);
+//            this.mixins.observable.constructor.call(this, config);
             this.addEvents('loaded');
             this.callParent(arguments);
         },
