@@ -14,45 +14,38 @@
         extend: 'Ext.panel.Panel',
         alias: 'widget.iterationinforow',
         cls: 'iterationInfoRow',
-        requires: [ 'Rally.data.wsapi.Store' ],
+        requires: ['Rally.data.wsapi.Store'],
 
-        items: [
-        {
-            xtype: 'panel',
-            border: 0,
-            flex: 1,
-            itemId: 'leftPanel'
-        },
-        {
-            xtype: 'panel',
-            border: 0,
-            flex: 1,
-            itemId: 'rightPanel'
-        }
-            ],
+        items: [{
+                xtype: 'panel',
+                border: 0,
+                flex: 1,
+                itemId: 'leftPanel'
+            },
+            {
+                xtype: 'panel',
+                border: 0,
+                flex: 1,
+                itemId: 'rightPanel'
+            }
+        ],
         layout: {
             type: 'hbox',
             align: 'stretch'
         },
 
-        renderTo: Ext.getBody(),
+        //        renderTo: Ext.getBody(),
 
         leftTemplate: new Ext.Template('<table style="margin-left: 25px;"><tr><td style="font-weight: bold;">Sprint:</td><td>{sprintName}</td></tr>' +
-                                       '<tr><td style="font-weight: bold;">Start Date:</td><td>{startDate}</td></tr>' +
-                                       '<tr><td style="font-weight: bold;">End Date:</td><td>{endDate}</td></tr></table>'),
-            rightTemplate:  new Ext.Template('<table style="margin-left: 25px;"><tr><td style="font-weight: bold;">Theme:</td></tr><tr><td>{sprintTheme}</td></tr></table>'),
+            '<tr><td style="font-weight: bold;">Start Date:</td><td>{startDate}</td></tr>' +
+            '<tr><td style="font-weight: bold;">End Date:</td><td>{endDate}</td></tr></table>'),
+        rightTemplate: new Ext.Template('<table style="margin-left: 25px;"><tr><td style="font-weight: bold;">Theme:</td></tr><tr><td>{sprintTheme}</td></tr></table>'),
 
-            store: null,
+        store: null,
         iteration: null,
-
-        mixins: {
-            observable: 'Ext.util.Observable'
-        },
 
         constructor: function(config) {
             this.mergeConfig(config);
-
-            this.mixins.observable.constructor.call(this, config);
             this.addEvents('loaded');
             this.callParent(arguments);
         },
@@ -60,12 +53,12 @@
         _load: function(store, data) {
             var startDt = Rally.util.DateTime.format(data[0].data.StartDate, 'M d, Y');
             var endDt = Rally.util.DateTime.format(data[0].data.EndDate, 'M d, Y');
-            var leftHtml = this.leftTemplate.apply( {
+            var leftHtml = this.leftTemplate.apply({
                 sprintName: data[0].data.Name,
                 startDate: startDt,
                 endDate: endDt
             });
-            var rightHtml = this.rightTemplate.apply( { sprintTheme: data[0].data.Theme });
+            var rightHtml = this.rightTemplate.apply({ sprintTheme: data[0].data.Theme });
 
             //            console.log("Iteration = %o\n", data);
             this.getComponent('leftPanel').update(leftHtml);
@@ -85,10 +78,10 @@
                     },
                     fetch: [
                         'Name', 'StartDate', 'EndDate', 'Theme'
-                        ]
+                    ]
                 });
             }
-            this.store.setFilter( {
+            this.store.setFilter({
                 property: 'ObjectID',
                 value: iter
             });
@@ -102,72 +95,140 @@
     });
 })();
 
+                (function() {
+    var Ext = window.Ext4 || window.Ext;
 
-                
-(function() {
+    Ext.define('PepsiCo.app.sprintreport.ReleaseCfdPanel', {
+    extend: 'Ext.panel.Panel',
+    alias: 'widget.releasecfdreport',
+    cls: 'sprint-report-charts',
+
+
+    config: {
+        width: 200,
+        height: 200,
+        releases: []
+    },
+
+    report: null,
+    store: null,
+
+    constructor: function(cfg) {
+        this.mergeConfig(cfg);
+        this.initConfig(cfg);
+        this.callParent(arguments);
+    },
+
+    _load: function(store, data) {
+        console.log("Release = %o\n", data);
+
+        var rls = [ data[0].get('ObjectID') ];
+        this.report = Ext.create('Rally.ui.report.StandardReport', {
+            reportConfig: {
+                report: 'ReleaseCumulativeFlowDiagram',
+                releases: rls,
+                legend: 'show'
+            },
+            width: this.getWidth(),
+            height: this.getHeight()
+        });
+
+    },
+
+    loadRelease: function(releaseName) {
+        if (!this.store) {
+            this.store = Ext.create('Rally.data.wsapi.Store', {
+                model: 'Release',
+                autoLoad: false,
+                listeners: {
+                    load: this._load,
+                    scope: this
+                },
+                fetch: [
+                    'Name', 'StartDate', 'EndDate', 'ObjectID'
+                ]
+            });
+        }
+        this.store.setFilter({
+            property: 'Name',
+            value: releaseName
+        });
+
+        this.store.load();
+
+    }
+
+    });
+})();
+
+                (function() {
     var Ext = window.Ext4 || window.Ext;
 
     Ext.define('PepsiCo.app.sprintreport.SprintReportCharts', {
         extend: 'Ext.panel.Panel',
         alias: 'widget.sprintreportcharts',
         cls: 'sprint-report-charts',
-        requires: [ 'Rally.data.wsapi.Store' ],
+        requires: ['Rally.data.wsapi.Store'],
 
-        items: [
-        {
-            xtype: 'panel',
-            border: 1,
-            flex: 1,
-            title: 'Sprint Burndown',
-            layout: 'fit',
-            id: 'leftChartsPanelID',
-            itemId: 'leftChartsPanel'
-        },
-        {
-            xtype: 'panel',
-            border: 1,
-            flex: 1,
-            layout: 'fit',
-            id: 'rightChartsPanelID',
-            itemId: 'rightChartsPanel'
-        }
-            ],
+        items: [{
+                xtype: 'panel',
+                border: 1,
+                flex: 1,
+                title: 'Sprint Burndown',
+                layout: 'fit',
+                id: 'leftChartsPanelID',
+                itemId: 'leftChartsPanel'
+            },
+            {
+                xtype: 'panel',
+                border: 1,
+                flex: 1,
+                layout: 'fit',
+                id: 'rightChartsPanelID',
+                itemId: 'rightChartsPanel'
+            }
+        ],
         layout: {
             type: 'hbox',
             align: 'stretch'
         },
 
-            store: null,
+        store: null,
         iteration: null,
 
         constructor: function(config) {
             this.mergeConfig(config);
-            this.mixins.observable.constructor.call(this, config);
             this.callParent(arguments);
         },
 
         _load: function() {
-            var iters = [ this.iteration ];
+            var iters = [this.iteration];
             var iterBurn = Ext.create('Rally.ui.report.StandardReport', {
                 reportConfig: {
-                        report: 'IterationBurndown',
-                        iterations: iters,
-                        legend: 'show'
-                    },
+                    report: 'IterationBurndown',
+                    iterations: iters,
+                    legend: 'show'
+                },
                 width: 400,
                 height: 400
-                });
+            });
             console.log("item 0 : %o\n", this.items.getAt(0));
             this.items.getAt(0).add(iterBurn);
+
+            var rCfd = Ext.create('PepsiCo.app.sprintreport.ReleaseCfdPanel', {
+                    width: 100,
+                    height: 400
+            });
+            
+            this.items.getAt(1).add(rCfd);
         },
-        
+
         _setIterationId: function(iter) {
             this.iteration = iter;
         }
 
     });
 })();
-
 
                 (function() {
     var Ext = window.Ext4 || window.Ext;

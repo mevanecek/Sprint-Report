@@ -38,7 +38,7 @@
       location = "group:Sprint-Report-Original.html">
    </FileRef>
    <FileRef
-      location = "group:ReleaseCfd.js">
+      location = "group:ReleaseCfdPanel.js">
    </FileRef>
    <FileRef
       location = "group:/Users/mattvanecek/Documents/CodeProjects/Sprint-Report/SprintMetricsRow.js">

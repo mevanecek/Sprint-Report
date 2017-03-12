@@ -35,7 +35,6 @@
 
         constructor: function(config) {
             this.mergeConfig(config);
-            this.mixins.observable.constructor.call(this, config);
             this.callParent(arguments);
         },
 
@@ -52,6 +51,14 @@
             });
             console.log("item 0 : %o\n", this.items.getAt(0));
             this.items.getAt(0).add(iterBurn);
+
+            var rCfd = Ext.create('PepsiCo.app.sprintreport.ReleaseCfdPanel', {
+                    width: 400,
+                    height: 400
+            });
+
+            rCfd.loadRelease('Image Vision Upgrade - PI');
+            this.items.getAt(1).add(rCfd);
         },
 
         _setIterationId: function(iter) {

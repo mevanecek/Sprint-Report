@@ -35,14 +35,8 @@
         store: null,
         iteration: null,
 
-        //        mixins: {
-        //            observable: 'Ext.util.Observable'
-        //        },
-
         constructor: function(config) {
             this.mergeConfig(config);
-
-            //            this.mixins.observable.constructor.call(this, config);
             this.addEvents('loaded');
             this.callParent(arguments);
         },
