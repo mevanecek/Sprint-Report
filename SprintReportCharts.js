@@ -12,7 +12,7 @@
                 border: 1,
                 flex: 1,
                 title: 'Sprint Burndown',
-                layout: 'fit',
+                layout:  { type: 'fit', align: 'center' },
                 id: 'leftChartsPanelID',
                 itemId: 'leftChartsPanel'
             },
@@ -20,14 +20,15 @@
                 xtype: 'panel',
                 border: 1,
                 flex: 1,
-                layout: 'fit',
+                title: 'Release CFD',
+                layout:  { type: 'fit', align: 'center' },
                 id: 'rightChartsPanelID',
                 itemId: 'rightChartsPanel'
             }
         ],
         layout: {
             type: 'hbox',
-            align: 'stretch'
+            align: 'pack'
         },
 
         store: null,
@@ -39,6 +40,9 @@
         },
 
         _load: function() {
+            this.items.getAt(0).removeAll();
+            this.items.getAt(1).removeAll();
+
             var iters = [this.iteration];
             var iterBurn = Ext.create('Rally.ui.report.StandardReport', {
                 reportConfig: {
@@ -46,15 +50,14 @@
                     iterations: iters,
                     legend: 'show'
                 },
-                width: 400,
-                height: 400
+                height: 450,
+                width: 400
             });
-            console.log("item 0 : %o\n", this.items.getAt(0));
             this.items.getAt(0).add(iterBurn);
 
             var rCfd = Ext.create('PepsiCo.app.sprintreport.ReleaseCfdPanel', {
-                    width: 400,
-                    height: 400
+                    reportWidth: 400,
+                    reportHeight: 450
             });
 
             rCfd.loadRelease('Image Vision Upgrade - PI');

@@ -15,7 +15,7 @@
         },
         columnLines: true,
         width: 915,
-        bodyStyle: 'margin-bottom: 50px;',
+        bodyStyle: 'margin-bottom: 25px;',
         title: 'User Stories',
         columnCfgs: [
             {

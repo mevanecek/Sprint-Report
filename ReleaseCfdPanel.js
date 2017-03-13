@@ -8,8 +8,8 @@
 
 
     config: {
-        width: 200,
-        height: 200,
+        reportWidth: 200,
+        reportHeight: 200,
         releases: []
     },
 
@@ -24,6 +24,8 @@
 
     _load: function(store, data) {
         console.log("Release = %o\n", data);
+        var w = this.getReportWidth();
+        var h = this.getReportHeight();
 
         var rls = [ data[0].get('ObjectID') ];
         this.report = Ext.create('Rally.ui.report.StandardReport', {
@@ -32,10 +34,10 @@
                 releases: rls,
                 legend: 'show'
             },
-            width: this.getWidth(),
-            height: this.getHeight()
+            height: h,
+            width: w
         });
-
+        this.add(this.report);
     },
 
     loadRelease: function(releaseName) {

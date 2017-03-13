@@ -105,8 +105,8 @@
 
 
     config: {
-        width: 200,
-        height: 200,
+        reportWidth: 200,
+        reportHeight: 200,
         releases: []
     },
 
@@ -121,6 +121,8 @@
 
     _load: function(store, data) {
         console.log("Release = %o\n", data);
+        var w = this.getReportWidth();
+        var h = this.getReportHeight();
 
         var rls = [ data[0].get('ObjectID') ];
         this.report = Ext.create('Rally.ui.report.StandardReport', {
@@ -129,10 +131,10 @@
                 releases: rls,
                 legend: 'show'
             },
-            width: this.getWidth(),
-            height: this.getHeight()
+            width: w,
+            height: h,
         });
-
+        this.add(this.report);
     },
 
     loadRelease: function(releaseName) {
@@ -183,6 +185,7 @@
                 xtype: 'panel',
                 border: 1,
                 flex: 1,
+                title: 'Release CFD',
                 layout: 'fit',
                 id: 'rightChartsPanelID',
                 itemId: 'rightChartsPanel'
@@ -212,14 +215,14 @@
                 width: 400,
                 height: 400
             });
-            console.log("item 0 : %o\n", this.items.getAt(0));
             this.items.getAt(0).add(iterBurn);
 
             var rCfd = Ext.create('PepsiCo.app.sprintreport.ReleaseCfdPanel', {
-                    width: 100,
-                    height: 400
+                    reportWidth: 400,
+                    reportHeight: 425
             });
-            
+
+            rCfd.loadRelease('Image Vision Upgrade - PI');
             this.items.getAt(1).add(rCfd);
         },
 
@@ -675,7 +678,8 @@
         items: [
             {
                 xtype: 'container',
-                itemId: 'menuBar'
+                itemId: 'menuBar',
+                width: 915
             },
             {
                 xtype: 'container',
@@ -717,6 +721,7 @@
             this._createIterationInfo();
             this._createChartsRow();
             this._createIterationComboBox();
+            this._createPrintButton();
         },
 
         // Create and add the iteration information row
@@ -728,6 +733,25 @@
                 height: 150
             });
             this.iterationInfoRow = this.down('#reportheader').add(row);
+        },
+
+        _createPrintButton: function() {
+            var button = Ext.create('Rally.ui.Button', {
+                    text: 'Print',
+                    handler: this._printPage,
+//                    plugins: [ { ptype: 'rallyprint', defaultTitle: 'Sprint Report'} ],
+                    style: { float: 'right' }
+            });
+            this.down('#menuBar').add(button);
+        },
+
+        _printPage: function() {
+            Ext.Msg.alert('Button', 'You clicked me');
+            var print = Ext.create('Rally.ui.plugin.print.Print', {
+                    defaultTitle: 'Sprint Report'
+                });
+            print.setCmp(this);
+            print.openPrintPage();
         },
 
         // Create and add the metrics row
