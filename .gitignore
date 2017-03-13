@@ -11,5 +11,4 @@ node_modules
 #test files
 _SpecRunner.html
 .grunt
-
 *.xcuserstate
