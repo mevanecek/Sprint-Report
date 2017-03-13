@@ -1,7 +1,5 @@
-//API Docs: https://help.rallydev.com/apps/2.1/doc/
 (function() {
     var Ext = window.Ext4 || window.Ext;
-
 
     var gridConfig = {
         showPagingToolbar: false,
@@ -16,11 +14,10 @@
         border: 2,
         columnLines: true,
         layout: 'fit',
-        width: 913,
+        width: 915,
         margin: '0 0 25 0',
         title: 'User Stories',
-        columnCfgs: [
-            {
+        columnCfgs: [{
                 text: 'Feature',
                 dataIndex: 'FeatureName',
                 flex: 2
@@ -54,7 +51,6 @@
                     return value.Count;
                 },
                 flex: 1
-               // width: 55
             },
             {
                 text: 'Review Feedback',
@@ -72,8 +68,7 @@
     Ext.define('SprintReportApp', {
         extend: 'Rally.app.App',
         componentCls: 'app',
-        items: [
-            {
+        items: [{
                 xtype: 'container',
                 itemId: 'menuBar',
                 width: 915
@@ -89,18 +84,16 @@
             {
                 xtype: 'container',
                 itemId: 'chartsrow'
-            },
-            {
+            }, {
                 xtype: 'container',
                 itemId: 'storiesrow'
-            },
-            {
+            }, {
                 xtype: 'container',
                 //html: 'Footer Row',
                 itemId: 'footerrow',
                 height: 100
             }
-            ],
+        ],
         layout: {
             type: 'vbox',
             pack: 'center',
@@ -109,6 +102,7 @@
 
         iterationBox: null,
         iterationObjId: null,
+        releaseBox: null,
         stories: null,
         iterationInfoRow: null,
         metricsRow: null,
@@ -125,6 +119,7 @@
             this._createIterationInfo();
             this._createChartsRow();
             this._createIterationComboBox();
+            this._createReleaseComboBox();
             this._createPrintButton();
         },
 
@@ -141,37 +136,37 @@
 
         _createPrintButton: function() {
             var button = Ext.create('Rally.ui.Button', {
-                    text: 'Print',
-                    handler: this._printPage,
-//                    plugins: [ { ptype: 'rallyprint', defaultTitle: 'Sprint Report'} ],
-                    style: { float: 'right' }
+                text: 'Print',
+                handler: this._printPage,
+                //                    plugins: [ { ptype: 'rallyprint', defaultTitle: 'Sprint Report'} ],
+                style: { float: 'right' }
             });
             this.down('#menuBar').add(button);
         },
 
         _printPage: function() {
             var print = Ext.create('Rally.ui.plugin.print.Print', {
-                    defaultTitle: 'Sprint Report'
-                });
+                defaultTitle: 'Sprint Report'
+            });
             print.setCmp(this);
             print.openPrintPage();
         },
 
         // Create and add the metrics row
         _createMetricsRow: function() {
-            var metrow = Ext.create('PepsiCo.apps.sprintreport.SprintMetricsRow',{});
+            var metrow = Ext.create('PepsiCo.apps.sprintreport.SprintMetricsRow', {});
             this.metricsRow = this.down('#metricsrow').add(metrow);
         },
 
         // Add the row for the charts that will be displayed
         _createChartsRow: function() {
-             var row = Ext.create('PepsiCo.app.sprintreport.SprintReportCharts', {
-                 title: 'Progress',
-                 border: 0,
-                 margin: '0 0 15 0',
-                 width: 915
-             });
-             this.chartsRow = this.down('#chartsrow').add(row);
+            var row = Ext.create('PepsiCo.app.sprintreport.SprintReportCharts', {
+                title: 'Progress Charts',
+                border: 0,
+                margin: '0 0 15 0',
+                width: 915
+            });
+            this.chartsRow = this.down('#chartsrow').add(row);
         },
 
         // Add the IterationComboBox to the header, and set its listener.
@@ -187,19 +182,38 @@
             this.down('#menuBar').add(this.iterationBox);
         },
 
-        _iterationChange: function(source, newValue /*, oldValue */) {
-            // console.log('Iteration changed or loaded. Old = %o, new = %o\n', oldValue, newValue);
+        _iterationChange: function(source, newValue /*, oldValue */ ) {
             var objIdArr = newValue.split('/');
             this.iterationObjId = objIdArr[objIdArr.length - 1];
 
             this.iterationInfoRow._setIterationId(this.iterationObjId);
             this.iterationInfoRow._fetchIteration();
 
-            
-            this.chartsRow._setIterationId(this.iterationObjId);
-            this.chartsRow._load();
+
+            this.chartsRow.setIterationId(this.iterationObjId);
+            this.chartsRow.loadCharts();
 
             this._loadStoryData();
+        },
+
+        // Add the ReleaseComboBox to the header, and set its listener.
+        _createReleaseComboBox: function() {
+            this.releaseBox = Ext.create('Rally.ui.combobox.ReleaseComboBox', {
+                listeners: {
+                    change: this._releaseChange,
+                    scope: this
+                }
+            });
+            this.down('#menuBar').add(this.releaseBox);
+        },
+
+        _releaseChange: function(source, newValue /*, oldValue */ ) {
+            var objIdArr = newValue.split('/');
+            var relObjId = objIdArr[objIdArr.length - 1];
+
+            Ext.MessageBox.alert('Release Selected is  ' + relObjId);
+            this.chartsRow.setReleaseId(relObjId);
+            this.chartsRow.loadCharts();
         },
 
         _loadStoryData: function() {
@@ -236,7 +250,7 @@
             var records = this.stories._getStoryRecordsStore();
             gridConfig.store = records;
 
-//            this.storyGrid = Ext.create('PepsiCo.app.sprintreport.StoryGrid', { store: records });
+            //            this.storyGrid = Ext.create('PepsiCo.app.sprintreport.StoryGrid', { store: records });
             this.storyGrid = Ext.create('Rally.ui.grid.Grid', gridConfig);
             this.down('#storiesrow').add(this.storyGrid);
 
@@ -251,23 +265,23 @@
         _loadStoryCounts: function() {
             if (this.storyTable === null) {
                 this.storyTable = Ext.create('PepsiCo.app.sprintreport.StoryMetricStories', {
-                storyCount: this.stories.storyCount,
-                storiesAdded: this.stories.storiesAdded,
-                storiesAccepted: this.stories.storiesAccepted,
-                storiesIncomplete: this.stories.storiesIncomplete,
-                storiesPercent: this.stories.storiesPercent,
-                labelColumnTitle: 'Story Counts',
-                valueColumnTitle: 'Value',
-                store: Ext.create('Ext.data.Store', {
-                model: 'Values',
-                fields:['metricType', 'metricValue'],
-                data: [
-                    { 'metricType': '# Stories Planned',  'metricValue': this.stories.storyCount.toString() },
-                    { 'metricType': '# Stories Added',  'metricValue': this.stories.storiesAdded.toString() },
-                    { 'metricType': '# Stories Accepted', 'metricValue': this.stories.storiesAccepted.toString()  },
-                    { 'metricType': '# Stories Not Completed', 'metricValue': this.stories.storiesIncomplete.toString() },
-                    { 'metricType': '% Stories Completed', 'metricValue': this.stories.storiesPercent.toString() + '%' }
-                    ]
+                    storyCount: this.stories.storyCount,
+                    storiesAdded: this.stories.storiesAdded,
+                    storiesAccepted: this.stories.storiesAccepted,
+                    storiesIncomplete: this.stories.storiesIncomplete,
+                    storiesPercent: this.stories.storiesPercent,
+                    labelColumnTitle: 'Story Counts',
+                    valueColumnTitle: 'Value',
+                    store: Ext.create('Ext.data.Store', {
+                        model: 'Values',
+                        fields: ['metricType', 'metricValue'],
+                        data: [
+                            { 'metricType': '# Stories Planned', 'metricValue': this.stories.storyCount.toString() },
+                            { 'metricType': '# Stories Added', 'metricValue': this.stories.storiesAdded.toString() },
+                            { 'metricType': '# Stories Accepted', 'metricValue': this.stories.storiesAccepted.toString() },
+                            { 'metricType': '# Stories Not Completed', 'metricValue': this.stories.storiesIncomplete.toString() },
+                            { 'metricType': '% Stories Accepted', 'metricValue': this.stories.storiesPercent.toString() + '%' }
+                        ]
                     })
                 });
                 this.metricsRow.items.getAt(0).add(this.storyTable);
@@ -277,18 +291,18 @@
         _loadStoryPoints: function() {
             if (this.storyPointsTable === null) {
                 this.storyPointsTable = Ext.create('PepsiCo.app.sprintreport.StoryMetricStories', {
-                labelColumnTitle: 'Story Points',
-                valueColumnTitle: 'Value',
-                store: Ext.create('Ext.data.Store', {
-                model: 'Values',
-                fields:['metricType', 'metricValue'],
-                data: [
-                    { 'metricType': '# Points Planned',  'metricValue': this.stories.storyPoints.toString() },
-                    { 'metricType': '# Points Added',  'metricValue': this.stories.storyPointsAdded.toString() },
-                    { 'metricType': '# Points Accepted', 'metricValue': this.stories.storyPointsAccepted.toString()  },
-                    { 'metricType': '# Points Not Completed', 'metricValue': this.stories.storyPointsIncomplete.toString() },
-                    { 'metricType': '% Points Completed', 'metricValue': this.stories.storyPointsPercent.toString() + '%' }
-                    ]
+                    labelColumnTitle: 'Story Points',
+                    valueColumnTitle: 'Value',
+                    store: Ext.create('Ext.data.Store', {
+                        model: 'Values',
+                        fields: ['metricType', 'metricValue'],
+                        data: [
+                            { 'metricType': '# Points Planned', 'metricValue': this.stories.storyPoints.toString() },
+                            { 'metricType': '# Points Added', 'metricValue': this.stories.storyPointsAdded.toString() },
+                            { 'metricType': '# Points Accepted', 'metricValue': this.stories.storyPointsAccepted.toString() },
+                            { 'metricType': '# Points Not Completed', 'metricValue': this.stories.storyPointsIncomplete.toString() },
+                            { 'metricType': '% Points Completed', 'metricValue': this.stories.storyPointsPercent.toString() + '%' }
+                        ]
                     })
                 });
                 this.metricsRow.items.getAt(1).add(this.storyPointsTable);
@@ -301,21 +315,21 @@
             var todo = this.stories.todoHours;
             var actual = this.stories.actualHours;
 
-            var percent = (plan === 0) ? 0.00 : Math.round((actual/plan) * 100);
+            var percent = (plan === 0) ? 0.00 : Math.round((actual / plan) * 100);
 
             if (this.tasksTable === null) {
                 this.tasksTable = Ext.create('PepsiCo.app.sprintreport.StoryMetricStories', {
-                labelColumnTitle: 'Task Hours',
-                valueColumnTitle: 'Value',
-                store: Ext.create('Ext.data.Store', {
-                model: 'Values',
-                fields:['metricType', 'metricValue'],
-                data: [
-                    { 'metricType': 'Planned Task Hours',  'metricValue': plan.toString() },
-                    { 'metricType': 'To-Do Task Hours',  'metricValue': todo.toString() },
-                    { 'metricType': 'Actual Task Hours', 'metricValue': actual.toString() },
-                    { 'metricType': 'Actual/Planned', 'metricValue': percent.toString() + '%' }
-                    ]
+                    labelColumnTitle: 'Task Hours',
+                    valueColumnTitle: 'Value',
+                    store: Ext.create('Ext.data.Store', {
+                        model: 'Values',
+                        fields: ['metricType', 'metricValue'],
+                        data: [
+                            { 'metricType': 'Planned Task Hours', 'metricValue': plan.toString() },
+                            { 'metricType': 'To-Do Task Hours', 'metricValue': todo.toString() },
+                            { 'metricType': 'Actual Task Hours', 'metricValue': actual.toString() },
+                            { 'metricType': 'Actual/Planned', 'metricValue': percent.toString() + '%' }
+                        ]
                     })
                 });
                 this.metricsRow.items.getAt(2).add(this.tasksTable);

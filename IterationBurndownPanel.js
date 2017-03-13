@@ -1,16 +1,16 @@
 (function() {
     var Ext = window.Ext4 || window.Ext;
 
-    Ext.define('PepsiCo.app.sprintreport.ReleaseCfdPanel', {
+    Ext.define('PepsiCo.app.sprintreport.IterationBurndownPanel', {
         extend: 'Ext.panel.Panel',
-        alias: 'widget.releasecfdreport',
+        alias: 'widget.iterationburndownreport',
         cls: 'sprint-report-charts',
 
 
         config: {
             reportWidth: 200,
             reportHeight: 200,
-            releases: []
+            iterations: []
         },
 
         report: null,
@@ -19,7 +19,7 @@
         constructor: function(cfg) {
             this.mergeConfig(cfg);
             this.initConfig(cfg);
-            this.setReleases([]);
+            this.setIterations([]);
             this.callParent(arguments);
         },
 
@@ -27,11 +27,11 @@
             var w = this.getReportWidth();
             var h = this.getReportHeight();
 
-            var rls = this.getReleases();
+            var iters = this.iterations;
             this.report = Ext.create('Rally.ui.report.StandardReport', {
                 reportConfig: {
-                    report: 'ReleaseCumulativeFlowDiagram',
-                    releases: rls,
+                    report: 'IterationBurndown',
+                    iterations: iters,
                     legend: 'show'
                 },
                 height: h,
@@ -39,6 +39,6 @@
             });
 
             this.add(this.report);
-        },
+        }
     });
 })();

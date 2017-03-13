@@ -37,6 +37,7 @@
 
         constructor: function(config) {
             this.mergeConfig(config);
+            this.initConfig(config);
             this.addEvents('loaded');
             this.callParent(arguments);
         },

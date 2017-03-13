@@ -42,8 +42,7 @@
 
             if (config.iterationValue) {
                 this.iterationValue = config.iterationValue;
-            }
-            else {
+            } else {
                 this.iterationValue = 'Sprint 1';
                 this.iterationField = 'Iteration.Name';
             }
@@ -70,10 +69,10 @@
                         load: this._onDataLoaded,
                         scope: this
                     },
-                    fetch: [ 'ObjectID', 'FormattedID', 'Name', 'ScheduleState', 'PlanEstimate', 'Parent', 'Feature', 'Iteration',
-                        'Project', 'Notes', 'Tasks', 'Defects', 'State', 'TaskEstimateTotal', 'TaskRemainingTotal', 'TaskActualTotal' ]
-                    }
-                );
+                    fetch: ['ObjectID', 'FormattedID', 'Name', 'ScheduleState', 'PlanEstimate', 'Parent', 'Feature', 'Iteration',
+                        'Project', 'Notes', 'Tasks', 'Defects', 'State', 'TaskEstimateTotal', 'TaskRemainingTotal', 'TaskActualTotal'
+                    ]
+                });
             }
             this.store.load();
         },
@@ -101,10 +100,10 @@
         _onDataLoaded: function(store, data) {
 
             if (this.isLoaded) {
-               return;
+                return;
             }
 
-            this.records =      this._loadStoryRecords(store, data);
+            this.records = this._loadStoryRecords(store, data);
             this.storyCount = store.count();
             this.storyPoints = store.sum('PlanEstimate');
 
@@ -115,7 +114,7 @@
             var todo = 0;
             var actual = 0;
 
-            store.data.each(function(item /*, index, totalItems */) {
+            store.data.each(function(item /*, index, totalItems */ ) {
                 if ('Accepted' === item.data['ScheduleState']) {
                     acc++;
                     pacc += item.data['PlanEstimate'];
@@ -128,7 +127,7 @@
             this.plannedHours = plan;
             this.todoHours = todo;
             this.actualHours = actual;
-            
+
             this.storiesAccepted = acc;
             this.storyPointsAccepted = pacc;
 
@@ -162,7 +161,7 @@
                     tCount = record.get('Tasks').Count;
                 }
 
-                return Ext.apply( {
+                return Ext.apply({
                     FeatureName: fName,
                     TaskCount: tCount
                 }, record.getData());
@@ -178,7 +177,7 @@
                 pageSize: rawRecords.length + 1
             });
         },
-        
+
         _getStoryRecords: function() {
             if (this.records === null) {
                 this.records = this._loadStoryRecords(this.store, this.store.data);
@@ -186,6 +185,4 @@
             return this.records;
         },
     });
-
-
 })();
