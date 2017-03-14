@@ -103,8 +103,8 @@
         ],
         layout: {
             type: 'vbox',
-            pack: 'center',
-            align: 'center'
+            pack: 'center'
+                // align: 'center'
         },
 
         iterationBox: null,
@@ -154,13 +154,15 @@
         },
 
         _printPage: function() {
-//            var print = Ext.create('Rally.ui.plugin.print.Print', {
-//                defaultTitle: 'Sprint Report'
-//            });
-//            print.setCmp(this);
-//            print.openPrintPage();
+            //            var print = Ext.create('Rally.ui.plugin.print.Print', {
+            //                defaultTitle: 'Sprint Report'
+            //            });
+            //            print.setCmp(this);
+            //            print.openPrintPage();
             console.log('This = %o\n', this);
-            this.storyGrid.openPrintPage();
+            console.log('HTML = \n%o\n', document.documentElement.outerHTML);
+            this.storyGrid.openPrintPage({ defaultTitle: 'Sprint Report' });
+            // window.print();
         },
 
         // Create and add the metrics row
