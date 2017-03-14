@@ -2,6 +2,8 @@
     var Ext = window.Ext4 || window.Ext;
 
     var gridConfig = {
+        itemId: 'sprintReportStoryTable',
+        id: 'sprintReportStoryTable',
         showPagingToolbar: false,
         overflowY: 'auto',
         showRowActionsColumn: false,
@@ -17,6 +19,11 @@
         width: 915,
         margin: '0 0 25 0',
         title: 'User Stories',
+        plugins: [{
+            ptype: 'rallygridprintpage',
+            defaultTitle: 'Sprint Report',
+            gridSelector: 'sprintReportStoryTable'
+        }],
         columnCfgs: [{
                 text: 'Feature',
                 dataIndex: 'FeatureName',
@@ -135,9 +142,11 @@
         },
 
         _createPrintButton: function() {
+            var me = this;
             var button = Ext.create('Rally.ui.Button', {
                 text: 'Print',
                 handler: this._printPage,
+                scope: me,
                 //                    plugins: [ { ptype: 'rallyprint', defaultTitle: 'Sprint Report'} ],
                 style: { float: 'right' }
             });
@@ -145,11 +154,13 @@
         },
 
         _printPage: function() {
-            var print = Ext.create('Rally.ui.plugin.print.Print', {
-                defaultTitle: 'Sprint Report'
-            });
-            print.setCmp(this);
-            print.openPrintPage();
+//            var print = Ext.create('Rally.ui.plugin.print.Print', {
+//                defaultTitle: 'Sprint Report'
+//            });
+//            print.setCmp(this);
+//            print.openPrintPage();
+            console.log('This = %o\n', this);
+            this.storyGrid.openPrintPage();
         },
 
         // Create and add the metrics row
@@ -171,10 +182,11 @@
 
         // Add the IterationComboBox to the header, and set its listener.
         _createIterationComboBox: function() {
+            var me = this;
             this.iterationBox = Ext.create('Rally.ui.combobox.IterationComboBox', {
                 listeners: {
                     change: this._iterationChange,
-                    scope: this
+                    scope: me
                 },
                 style: { float: 'left' }
             });
@@ -198,10 +210,11 @@
 
         // Add the ReleaseComboBox to the header, and set its listener.
         _createReleaseComboBox: function() {
+            var me = this;
             this.releaseBox = Ext.create('Rally.ui.combobox.ReleaseComboBox', {
                 listeners: {
                     change: this._releaseChange,
-                    scope: this
+                    scope: me
                 }
             });
             this.down('#menuBar').add(this.releaseBox);
@@ -211,7 +224,6 @@
             var objIdArr = newValue.split('/');
             var relObjId = objIdArr[objIdArr.length - 1];
 
-            Ext.MessageBox.alert('Release Selected is  ' + relObjId);
             this.chartsRow.setReleaseId(relObjId);
             this.chartsRow.loadCharts();
         },
@@ -230,10 +242,11 @@
                 this.remove(this.storyGrid);
             }
 
+            var me = this;
             this.stories = Ext.create('PepsiCo.app.sprintreport.StoryStore', {
                 listeners: {
                     loaded: this._loadReportWidgets,
-                    scope: this
+                    scope: me
                 },
                 iterationValue: this.iterationObjId
             });
@@ -251,8 +264,8 @@
             gridConfig.store = records;
 
             //            this.storyGrid = Ext.create('PepsiCo.app.sprintreport.StoryGrid', { store: records });
-            this.storyGrid = Ext.create('Rally.ui.grid.Grid', gridConfig);
-            this.down('#storiesrow').add(this.storyGrid);
+            var grid = Ext.create('Rally.ui.grid.Grid', gridConfig);
+            this.storyGrid = this.down('#storiesrow').add(grid);
 
         },
 

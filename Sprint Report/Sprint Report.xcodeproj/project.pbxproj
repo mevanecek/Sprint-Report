@@ -10,6 +10,7 @@
 		5101C1491E6F93D80000CC89 /* SprintReportCharts.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = SprintReportCharts.js; path = ../SprintReportCharts.js; sourceTree = "<group>"; };
 		5101C14A1E7248550000CC89 /* ReleaseCfdPanel.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = ReleaseCfdPanel.js; path = ../ReleaseCfdPanel.js; sourceTree = "<group>"; };
 		516C2E461E6CE69A00E08C61 /* IterationInfo.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = IterationInfo.js; path = ../IterationInfo.js; sourceTree = "<group>"; };
+		517F152F1E77667800AB4671 /* IterationBurndownPanel.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = IterationBurndownPanel.js; path = ../IterationBurndownPanel.js; sourceTree = "<group>"; };
 		51B3FAAC1E672664000B3E9C /* SprintReport.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = SprintReport.js; path = ../SprintReport.js; sourceTree = "<group>"; };
 		51B3FAAD1E673868000B3E9C /* SprintMetricsRow.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = SprintMetricsRow.js; path = ../SprintMetricsRow.js; sourceTree = "<group>"; };
 		51B3FAAE1E675D2F000B3E9C /* StoryMetricStories.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = StoryMetricStories.js; path = ../StoryMetricStories.js; sourceTree = "<group>"; };
@@ -21,6 +22,7 @@
 		51B3FAA51E67262D000B3E9C = {
 			isa = PBXGroup;
 			children = (
+				517F152F1E77667800AB4671 /* IterationBurndownPanel.js */,
 				516C2E461E6CE69A00E08C61 /* IterationInfo.js */,
 				5101C14A1E7248550000CC89 /* ReleaseCfdPanel.js */,
 				5101C1491E6F93D80000CC89 /* SprintReportCharts.js */,

@@ -38,6 +38,9 @@
       location = "group:Sprint-Report-Original.html">
    </FileRef>
    <FileRef
+      location = "group:IterationBurndownPanel.js">
+   </FileRef>
+   <FileRef
       location = "group:ReleaseCfdPanel.js">
    </FileRef>
    <FileRef
