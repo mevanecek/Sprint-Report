@@ -53,6 +53,9 @@
       location = "group:SprintReportCharts.js">
    </FileRef>
    <FileRef
+      location = "group:SprintReportPanel.js">
+   </FileRef>
+   <FileRef
       location = "group:/Users/mattvanecek/Documents/CodeProjects/Sprint-Report/IterationInfo.js">
    </FileRef>
    <FileRef

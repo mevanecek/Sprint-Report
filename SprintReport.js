@@ -1,110 +1,45 @@
 (function() {
     var Ext = window.Ext4 || window.Ext;
 
-    var gridConfig = {
-        itemId: 'sprintReportStoryTable',
-        id: 'sprintReportStoryTable',
-        showPagingToolbar: false,
-        overflowY: 'auto',
-        showRowActionsColumn: false,
-        editable: false,
-        store: null,
-        storeConfig: {
-            pageSize: 5000
-        },
-        sortableColumns: false,
-        border: 2,
-        columnLines: true,
-        layout: 'fit',
-        width: 915,
-        margin: '0 0 25 0',
-        title: 'User Stories',
-        plugins: [{
-            ptype: 'rallygridprintpage',
-            defaultTitle: 'Sprint Report',
-            gridSelector: 'sprintReportStoryTable'
-        }],
-        columnCfgs: [{
-                text: 'Feature',
-                dataIndex: 'FeatureName',
-                flex: 2
-            },
-            {
-                xtype: 'templatecolumn',
-                text: 'ID',
-                dataIndex: 'FormattedID',
-                tpl: Ext.create('Rally.ui.renderer.template.FormattedIDTemplate'),
-                flex: 2
-            },
-            {
-                text: 'Name',
-                dataIndex: 'Name',
-                flex: 3
-            },
-            {
-                text: 'Points',
-                dataIndex: 'PlanEstimate',
-                flex: 1
-            },
-            {
-                text: 'Plan/Add',
-                dataIndex: 'Added',
-                flex: 1.5
-            },
-            {
-                text: '# of Defects',
-                dataIndex: 'Defects',
-                renderer: function(value) {
-                    return value.Count;
-                },
-                flex: 1
-            },
-            {
-                text: 'Review Feedback',
-                dataIndex: 'Notes',
-                flex: 5
-            },
-            {
-                text: 'Schedule State',
-                dataIndex: 'ScheduleState',
-                flex: 2
-            }
-        ]
-    };
+    const REPORT_WIDTH = 768;
 
     Ext.define('SprintReportApp', {
         extend: 'Rally.app.App',
         componentCls: 'app',
-        items: [{
-                xtype: 'container',
-                itemId: 'menuBar',
-                width: 915
-            },
-            {
-                xtype: 'container',
-                itemId: 'reportheader'
-            },
-            {
-                xtype: 'container',
-                itemId: 'metricsrow'
-            },
-            {
-                xtype: 'container',
-                itemId: 'chartsrow'
-            }, {
-                xtype: 'container',
-                itemId: 'storiesrow'
-            }, {
-                xtype: 'container',
-                //html: 'Footer Row',
-                itemId: 'footerrow',
-                height: 100
-            }
+        alias: 'widget.sprintreport',
+        cls: 'sprint-report',
+        items: [
+        {
+            xtype: 'container',
+            itemId: 'menuBar',
+            width: REPORT_WIDTH
+        },
+        {
+            xtype: 'container',
+            itemId: 'reportheader'
+        },
+        {
+            xtype: 'container',
+            itemId: 'metricsrow'
+        },
+        {
+            xtype: 'container',
+            itemId: 'chartsrow'
+        },
+        {
+            xtype: 'container',
+            itemId: 'storiesrow'
+        },
+        {
+            xtype: 'container',
+            itemId: 'footerrow',
+            height: 100
+        }
         ],
         layout: {
             type: 'vbox',
             pack: 'center'
-                // align: 'center'
+        // align: 'center'
         },
 
         iterationBox: null,
@@ -136,7 +71,7 @@
                 title: 'Sprint Information',
                 border: 0,
                 margin: '0 0 15 0',
-                width: 915
+                width: REPORT_WIDTH
             });
             this.iterationInfoRow = this.down('#reportheader').add(row);
         },
@@ -160,14 +95,15 @@
             //            print.setCmp(this);
             //            print.openPrintPage();
             console.log('This = %o\n', this);
-            console.log('HTML = \n%o\n', document.documentElement.outerHTML);
-            this.storyGrid.openPrintPage({ defaultTitle: 'Sprint Report' });
+            console.log('HTML = \n%o\n', this.metricsRow.getEl().getHTML() + this.storyGrid.getEl().getHTML());
+//            console.log('HTML = \n%o\n', document.documentElement.innerHTML);
+            //this.storyGrid.openPrintPage({ defaultTitle: 'Sprint Report' });
             // window.print();
         },
 
         // Create and add the metrics row
         _createMetricsRow: function() {
-            var metrow = Ext.create('PepsiCo.apps.sprintreport.SprintMetricsRow', {});
+            var metrow = Ext.create('PepsiCo.apps.sprintreport.SprintMetricsRow', { width: REPORT_WIDTH});
             this.metricsRow = this.down('#metricsrow').add(metrow);
         },
 
@@ -177,7 +113,7 @@
                 title: 'Progress Charts',
                 border: 0,
                 margin: '0 0 15 0',
-                width: 915
+                width: REPORT_WIDTH
             });
             this.chartsRow = this.down('#chartsrow').add(row);
         },
@@ -263,12 +199,11 @@
         // Load the Story table
         _loadFeatureStoryTable: function() {
             var records = this.stories._getStoryRecordsStore();
-            gridConfig.store = records;
+//            gridConfig.store = records;
 
-            //            this.storyGrid = Ext.create('PepsiCo.app.sprintreport.StoryGrid', { store: records });
-            var grid = Ext.create('Rally.ui.grid.Grid', gridConfig);
+            var grid = Ext.create('PepsiCo.app.sprintreport.StoryGrid', { store: records, width: REPORT_WIDTH });
+//            var grid = Ext.create('Rally.ui.grid.Grid', gridConfig);
             this.storyGrid = this.down('#storiesrow').add(grid);
-
         },
 
         _loadStoryMetrics: function() {

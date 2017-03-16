@@ -1,0 +1,494 @@
+<html class="x-strict x-viewport">
+
+<head>
+    <title>Sprint Report</title>
+
+    <!-- script type="text/javascript" src="https://rally1.rallydev.com/apps/2.1/sdk-debug.js"></script -->
+    <link rel="stylesheet" type="text/css" href="https://rally1.rallydev.com/apps/2.1/rui/resources/css/rui-fonts.css">
+    <link rel="stylesheet" type="text/css" href="https://rally1.rallydev.com/apps/2.1/rui/resources/css/rui-all_01.css">
+    <link rel="stylesheet" type="text/css" href="https://rally1.rallydev.com/apps/2.1/rui/resources/css/rui-all_02.css">
+
+    <!-- script type="text/javascript">
+        Rally.loadScripts(
+            [
+                "IterationInfo.js",
+                "ReleaseCfdPanel.js",
+                "IterationBurndownPanel.js",
+                "SprintReportCharts.js",
+                "SprintMetricsRow.js",
+                "StoryGrid.js",
+                "StoryStore.js",
+                "StoryMetricStories.js",
+                "SprintReport.js",
+            ],
+            function() {
+                Rally.launchApp('SprintReportApp', {
+                    name: "Sprint Report"
+                });
+            }, true);
+    </script -->
+    <!-- script type="text/javascript" src="IterationInfo.js?_dc=0.7987394679198911"></script -->
+
+    <link rel="stylesheet" type="text/css" href="SprintReport.css">
+    <!-- script type="text/javascript" src="ReleaseCfdPanel.js"></script>
+    <script type="text/javascript" src="IterationBurndownPanel.js"></script>
+    <script type="text/javascript" src="SprintReportCharts.js"></script>
+    <script type="text/javascript" src="SprintMetricsRow.js"></script>
+    <script type="text/javascript" src="StoryGrid.js"></script>
+    <script type="text/javascript" src="StoryStore.js"></script>
+    <script type="text/javascript" src="StoryMetricStories.js"></script>
+    <script type="text/javascript" src="SprintReport.js"></script -->
+    <style id="style-1-cropbar-clipper">
+        /* Copyright 2014 Evernote Corporation. All rights reserved. */
+        
+        .en-markup-crop-options {
+            top: 18px !important;
+            left: 50% !important;
+            margin-left: -100px !important;
+            width: 200px !important;
+            border: 2px rgba(255, 255, 255, .38) solid !important;
+            border-radius: 4px !important;
+        }
+        
+        .en-markup-crop-options div div:first-of-type {
+            margin-left: 0px !important;
+        }
+    </style>
+</head>
+<body class="x-body x-webkit x-chrome x-mac x-layout-fit x-border-box x-container x-container-default" id="x-gen1018" data-feedly-mini="yes">
+
+<div class="x-panel-header x-header x-header-horizontal x-docked x-unselectable x-panel-header-default x-horizontal x-panel-header-horizontal x-panel-header-default-horizontal x-top x-panel-header-top x-panel-header-default-top x-docked-top x-panel-header-docked-top x-panel-header-default-docked-top x-docked-noborder-top x-docked-noborder-right x-docked-noborder-left" id="sprintrepormetricsrow-1016_header" style="right: auto; left: 0px; top: 0px; width: 915px;">
+    <div id="sprintrepormetricsrow-1016_header-body" class="x-header-body x-panel-header-body x-panel-header-body-default x-panel-header-body-horizontal x-panel-header-body-default-horizontal x-panel-header-body-top x-panel-header-body-default-top x-panel-header-body-docked-top x-panel-header-body-default-docked-top x-box-layout-ct x-panel-header-body-default-horizontal x-panel-header-body-default-top x-panel-header-body-default-docked-top" role="presentation" style="width: 905px;">
+        <div id="sprintrepormetricsrow-1016_header-innerCt" class="x-box-inner " role="presentation" style="width: 905px; height: 17px;">
+            <div id="sprintrepormetricsrow-1016_header-targetEl" class="x-box-target" role="presentation" style="width: 905px;">
+                <div class="x-component x-header-text-container x-panel-header-text-container x-panel-header-text-container-default x-box-item x-component-default" unselectable="on" id="sprintrepormetricsrow-1016_header_hd" style="right: auto; left: 0px; top: 0px; margin: 0px; width: 905px;"><span id="sprintrepormetricsrow-1016_header_hd-textEl" class="x-header-text x-panel-header-text x-panel-header-text-default" unselectable="on">Sprint Metrics</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="sprintrepormetricsrow-1016-body" class="x-panel-body x-panel-body-default x-box-layout-ct x-panel-body-default x-docked-noborder-right x-docked-noborder-bottom x-docked-noborder-left" role="presentation" style="width: 915px; height: 161px; left: 0px; top: 29px;">
+    <div id="sprintrepormetricsrow-1016-innerCt" class="x-box-inner " role="presentation" style="width: 915px; height: 160px;">
+        <div id="sprintrepormetricsrow-1016-targetEl" class="x-box-target" role="presentation" style="width: 915px;">
+            <div class="x-panel x-box-item x-panel-default" id="panel-1017" style="right: auto; left: 0px; top: 0px; margin: 0px; width: 305px; height: 160px;">
+                <div id="panel-1017-body" class="x-panel-body x-panel-body-default x-panel-body-default x-docked-noborder-top x-docked-noborder-right x-docked-noborder-bottom x-docked-noborder-left" role="presentation" style="padding: 5px; font-size: 10px; width: 305px; height: 160px; left: 0px; top: 0px;"><span id="panel-1017-outerCt" style="display: table; width: 100%; table-layout: fixed; height: 100%;" role="presentation"><div id="panel-1017-innerCt" style="display:table-cell;height:100%;vertical-align:top;" class="" role="presentation"><div class="x-panel story-metric-stories x-panel-default-framed x-border-box" id="storymetricstories-1096" style="height: 151px;"><div class="x-grid-header-ct x-docked x-grid-header-ct-default x-docked-top x-grid-header-ct-docked-top x-grid-header-ct-default-docked-top x-box-layout-ct" style="border-width: 1px; width: 285px; right: auto; left: 4px; top: 4px;" id="headercontainer-1097"><div id="headercontainer-1097-innerCt" class="x-box-inner " role="presentation" style="width: 298px; height: 24px;"><div id="headercontainer-1097-targetEl" class="x-box-target" role="presentation" style="width: 298px;"><div class="x-column-header x-column-header-align-left x-box-item x-column-header-default x-unselectable x-column-header-first" style="border-width: 1px; right: auto; left: 0px; top: 0px; margin: 0px; width: 227px;" id="gridcolumn-1098"><div id="gridcolumn-1098-titleEl" role="presentation" class="x-column-header-inner"><span id="gridcolumn-1098-textEl" class="x-column-header-text">Story Counts</span>
+                    <div id="gridcolumn-1098-triggerEl" role="presentation" class="x-column-header-trigger"></div>
+                </div>
+            </div>
+            <div class="x-column-header x-column-header-align-left x-box-item x-column-header-default x-unselectable x-column-header-last" style="border-width: 1px; right: auto; left: 227px; top: 0px; margin: 0px; width: 56px;" id="gridcolumn-1099">
+                <div id="gridcolumn-1099-titleEl" role="presentation" class="x-column-header-inner"><span id="gridcolumn-1099-textEl" class="x-column-header-text">Value</span>
+                    <div id="gridcolumn-1099-triggerEl" role="presentation" class="x-column-header-trigger"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="storymetricstories-1096-body" class="x-panel-body x-grid-with-col-lines x-grid-with-row-lines x-grid-body x-panel-body-default-framed x-layout-fit x-panel-body-default-framed" role="presentation" style="border-top-width: 1px; left: 0px; top: 23px; width: 285px; height: 118px;">
+    <div class="x-grid-view x-fit-item x-grid-view-default x-unselectable" id="gridview-1100" tabindex="-1" style="overflow: auto; margin: 0px; width: 283px;">
+        <table id="gridview-1100-table" class="x-gridview-1100-table x-grid-table" border="0" cellspacing="0" cellpadding="0" style="width: 283px;">
+            <colgroup role="presentation">
+                <col role="presentation" class="x-grid-cell-headerId-gridcolumn-1098" style="width:227px">
+            </colgroup>
+            <colgroup role="presentation">
+                <col role="presentation" class="x-grid-cell-headerId-gridcolumn-1099" style="width:56px">
+            </colgroup>
+            <tbody id="gridview-1100-body">
+                <tr id="gridview-1100-record-ext-record-173" data-boundview="gridview-1100" data-recordid="ext-record-173" data-recordindex="0" class="x-grid-row  x-grid-data-row" tabindex="-1">
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1098 x-grid-cell-first x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;"># Stories Planned</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1099 x-grid-cell-last x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">5</div>
+                    </td>
+                </tr>
+                <tr id="gridview-1100-record-ext-record-174" data-boundview="gridview-1100" data-recordid="ext-record-174" data-recordindex="1" class="x-grid-row x-grid-row-alt x-grid-data-row" tabindex="-1">
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1098 x-grid-cell-first x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;"># Stories Added</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1099 x-grid-cell-last x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">0</div>
+                    </td>
+                </tr>
+                <tr id="gridview-1100-record-ext-record-175" data-boundview="gridview-1100" data-recordid="ext-record-175" data-recordindex="2" class="x-grid-row  x-grid-data-row" tabindex="-1">
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1098 x-grid-cell-first x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;"># Stories Accepted</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1099 x-grid-cell-last x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">1</div>
+                    </td>
+                </tr>
+                <tr id="gridview-1100-record-ext-record-176" data-boundview="gridview-1100" data-recordid="ext-record-176" data-recordindex="3" class="x-grid-row x-grid-row-alt x-grid-data-row" tabindex="-1">
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1098 x-grid-cell-first x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;"># Stories Not Completed</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1099 x-grid-cell-last x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">4</div>
+                    </td>
+                </tr>
+                <tr id="gridview-1100-record-ext-record-177" data-boundview="gridview-1100" data-recordid="ext-record-177" data-recordindex="4" class="x-grid-row  x-grid-data-row" tabindex="-1">
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1098 x-grid-cell-first x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">% Stories Accepted</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1099 x-grid-cell-last x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">20%</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+</div>
+</span>
+</div>
+</div>
+<div class="x-panel x-box-item x-panel-default" id="panel-1018" style="right: auto; left: 305px; top: 0px; margin: 0px; width: 305px; height: 160px;">
+    <div id="panel-1018-body" class="x-panel-body x-panel-body-default x-panel-body-default x-docked-noborder-top x-docked-noborder-right x-docked-noborder-bottom x-docked-noborder-left" role="presentation" style="padding: 5px; font-size: 10px; width: 305px; height: 160px; left: 0px; top: 0px;"><span id="panel-1018-outerCt" style="display: table; width: 100%; table-layout: fixed; height: 100%;" role="presentation"><div id="panel-1018-innerCt" style="display:table-cell;height:100%;vertical-align:top;" class="" role="presentation"><div class="x-panel story-metric-stories x-panel-default-framed x-border-box" id="storymetricstories-1101" style="height: 151px;"><div class="x-grid-header-ct x-docked x-grid-header-ct-default x-docked-top x-grid-header-ct-docked-top x-grid-header-ct-default-docked-top x-box-layout-ct" style="border-width: 1px; width: 285px; right: auto; left: 4px; top: 4px;" id="headercontainer-1102"><div id="headercontainer-1102-innerCt" class="x-box-inner " role="presentation" style="width: 298px; height: 24px;"><div id="headercontainer-1102-targetEl" class="x-box-target" role="presentation" style="width: 298px;"><div class="x-column-header x-column-header-align-left x-box-item x-column-header-default x-unselectable x-column-header-first" style="border-width: 1px; right: auto; left: 0px; top: 0px; margin: 0px; width: 227px;" id="gridcolumn-1103"><div id="gridcolumn-1103-titleEl" role="presentation" class="x-column-header-inner"><span id="gridcolumn-1103-textEl" class="x-column-header-text">Story Points</span>
+        <div id="gridcolumn-1103-triggerEl" role="presentation" class="x-column-header-trigger"></div>
+    </div>
+</div>
+<div class="x-column-header x-column-header-align-left x-box-item x-column-header-default x-unselectable x-column-header-last" style="border-width: 1px; right: auto; left: 227px; top: 0px; margin: 0px; width: 56px;" id="gridcolumn-1104">
+    <div id="gridcolumn-1104-titleEl" role="presentation" class="x-column-header-inner"><span id="gridcolumn-1104-textEl" class="x-column-header-text">Value</span>
+        <div id="gridcolumn-1104-triggerEl" role="presentation" class="x-column-header-trigger"></div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+<div id="storymetricstories-1101-body" class="x-panel-body x-grid-with-col-lines x-grid-with-row-lines x-grid-body x-panel-body-default-framed x-layout-fit x-panel-body-default-framed" role="presentation" style="border-top-width: 1px; left: 0px; top: 23px; width: 285px; height: 118px;">
+    <div class="x-grid-view x-fit-item x-grid-view-default x-unselectable" id="gridview-1105" tabindex="-1" style="overflow: auto; margin: 0px; width: 283px;">
+        <table id="gridview-1105-table" class="x-gridview-1105-table x-grid-table" border="0" cellspacing="0" cellpadding="0" style="width: 283px;">
+            <colgroup role="presentation">
+                <col role="presentation" class="x-grid-cell-headerId-gridcolumn-1103" style="width:227px">
+            </colgroup>
+            <colgroup role="presentation">
+                <col role="presentation" class="x-grid-cell-headerId-gridcolumn-1104" style="width:56px">
+            </colgroup>
+            <tbody id="gridview-1105-body">
+                <tr id="gridview-1105-record-ext-record-178" data-boundview="gridview-1105" data-recordid="ext-record-178" data-recordindex="0" class="x-grid-row  x-grid-data-row" tabindex="-1">
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1103 x-grid-cell-first x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;"># Points Planned</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1104 x-grid-cell-last x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">2</div>
+                    </td>
+                </tr>
+                <tr id="gridview-1105-record-ext-record-179" data-boundview="gridview-1105" data-recordid="ext-record-179" data-recordindex="1" class="x-grid-row x-grid-row-alt x-grid-data-row" tabindex="-1">
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1103 x-grid-cell-first x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;"># Points Added</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1104 x-grid-cell-last x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">0</div>
+                    </td>
+                </tr>
+                <tr id="gridview-1105-record-ext-record-180" data-boundview="gridview-1105" data-recordid="ext-record-180" data-recordindex="2" class="x-grid-row  x-grid-data-row" tabindex="-1">
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1103 x-grid-cell-first x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;"># Points Accepted</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1104 x-grid-cell-last x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">2</div>
+                    </td>
+                </tr>
+                <tr id="gridview-1105-record-ext-record-181" data-boundview="gridview-1105" data-recordid="ext-record-181" data-recordindex="3" class="x-grid-row x-grid-row-alt x-grid-data-row" tabindex="-1">
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1103 x-grid-cell-first x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;"># Points Not Completed</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1104 x-grid-cell-last x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">0</div>
+                    </td>
+                </tr>
+                <tr id="gridview-1105-record-ext-record-182" data-boundview="gridview-1105" data-recordid="ext-record-182" data-recordindex="4" class="x-grid-row  x-grid-data-row" tabindex="-1">
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1103 x-grid-cell-first x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">% Points Completed</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1104 x-grid-cell-last x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">100%</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+</div>
+</span>
+</div>
+</div>
+<div class="x-panel x-box-item x-panel-default" id="panel-1019" style="right: auto; left: 610px; top: 0px; margin: 0px; width: 305px; height: 160px;">
+    <div id="panel-1019-body" class="x-panel-body x-panel-body-default x-panel-body-default x-docked-noborder-top x-docked-noborder-right x-docked-noborder-bottom x-docked-noborder-left" role="presentation" style="padding: 5px; font-size: 10px; width: 305px; height: 160px; left: 0px; top: 0px;"><span id="panel-1019-outerCt" style="display: table; width: 100%; table-layout: fixed; height: 100%;" role="presentation"><div id="panel-1019-innerCt" style="display:table-cell;height:100%;vertical-align:top;" class="" role="presentation"><div class="x-panel story-metric-stories x-panel-default-framed x-border-box" id="storymetricstories-1106" style="height: 128px;"><div class="x-grid-header-ct x-docked x-grid-header-ct-default x-docked-top x-grid-header-ct-docked-top x-grid-header-ct-default-docked-top x-box-layout-ct" style="border-width: 1px; width: 285px; right: auto; left: 4px; top: 4px;" id="headercontainer-1107"><div id="headercontainer-1107-innerCt" class="x-box-inner " role="presentation" style="width: 298px; height: 24px;"><div id="headercontainer-1107-targetEl" class="x-box-target" role="presentation" style="width: 298px;"><div class="x-column-header x-column-header-align-left x-box-item x-column-header-default x-unselectable x-column-header-first" style="border-width: 1px; right: auto; left: 0px; top: 0px; margin: 0px; width: 227px;" id="gridcolumn-1108"><div id="gridcolumn-1108-titleEl" role="presentation" class="x-column-header-inner"><span id="gridcolumn-1108-textEl" class="x-column-header-text">Task Hours</span>
+        <div id="gridcolumn-1108-triggerEl" role="presentation" class="x-column-header-trigger"></div>
+    </div>
+</div>
+<div class="x-column-header x-column-header-align-left x-box-item x-column-header-default x-unselectable x-column-header-last" style="border-width: 1px; right: auto; left: 227px; top: 0px; margin: 0px; width: 56px;" id="gridcolumn-1109">
+    <div id="gridcolumn-1109-titleEl" role="presentation" class="x-column-header-inner"><span id="gridcolumn-1109-textEl" class="x-column-header-text">Value</span>
+        <div id="gridcolumn-1109-triggerEl" role="presentation" class="x-column-header-trigger"></div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+<div id="storymetricstories-1106-body" class="x-panel-body x-grid-with-col-lines x-grid-with-row-lines x-grid-body x-panel-body-default-framed x-layout-fit x-panel-body-default-framed" role="presentation" style="border-top-width: 1px; left: 0px; top: 23px; width: 285px; height: 95px;">
+    <div class="x-grid-view x-fit-item x-grid-view-default x-unselectable" id="gridview-1110" tabindex="-1" style="overflow: auto; margin: 0px; width: 283px;">
+        <table id="gridview-1110-table" class="x-gridview-1110-table x-grid-table" border="0" cellspacing="0" cellpadding="0" style="width: 283px;">
+            <colgroup role="presentation">
+                <col role="presentation" class="x-grid-cell-headerId-gridcolumn-1108" style="width:227px">
+            </colgroup>
+            <colgroup role="presentation">
+                <col role="presentation" class="x-grid-cell-headerId-gridcolumn-1109" style="width:56px">
+            </colgroup>
+            <tbody id="gridview-1110-body">
+                <tr id="gridview-1110-record-ext-record-183" data-boundview="gridview-1110" data-recordid="ext-record-183" data-recordindex="0" class="x-grid-row x-grid-data-row" tabindex="-1">
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1108 x-grid-cell-first x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">Planned Task Hours</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1109 x-grid-cell-last x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">0</div>
+                    </td>
+                </tr>
+                <tr id="gridview-1110-record-ext-record-184" data-boundview="gridview-1110" data-recordid="ext-record-184" data-recordindex="1" class="x-grid-row x-grid-row-alt x-grid-data-row" tabindex="-1">
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1108 x-grid-cell-first x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">To-Do Task Hours</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1109 x-grid-cell-last x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">0</div>
+                    </td>
+                </tr>
+                <tr id="gridview-1110-record-ext-record-185" data-boundview="gridview-1110" data-recordid="ext-record-185" data-recordindex="2" class="x-grid-row x-grid-data-row" tabindex="-1">
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1108 x-grid-cell-first x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">Actual Task Hours</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1109 x-grid-cell-last x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">0</div>
+                    </td>
+                </tr>
+                <tr id="gridview-1110-record-ext-record-186" data-boundview="gridview-1110" data-recordid="ext-record-186" data-recordindex="3" class="x-grid-row x-grid-row-alt x-grid-data-row" tabindex="-1">
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1108 x-grid-cell-first x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">Actual/Planned</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1109 x-grid-cell-last x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">0%</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+</div>
+</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="x-panel-header x-header x-header-horizontal x-docked x-unselectable x-panel-header-default x-horizontal x-panel-header-horizontal x-panel-header-default-horizontal x-top x-panel-header-top x-panel-header-default-top x-docked-top x-panel-header-docked-top x-panel-header-default-docked-top" id="sprintReportStoryTable_header" style="width: 915px; right: auto; left: 0px; top: 0px;">
+    <div id="sprintReportStoryTable_header-body" class="x-header-body x-panel-header-body x-panel-header-body-default x-panel-header-body-horizontal x-panel-header-body-default-horizontal x-panel-header-body-top x-panel-header-body-default-top x-panel-header-body-docked-top x-panel-header-body-default-docked-top x-box-layout-ct x-panel-header-body-default-horizontal x-panel-header-body-default-top x-panel-header-body-default-docked-top" role="presentation" style="width: 905px;">
+        <div id="sprintReportStoryTable_header-innerCt" class="x-box-inner " role="presentation" style="width: 905px; height: 17px;">
+            <div id="sprintReportStoryTable_header-targetEl" class="x-box-target" role="presentation" style="width: 905px;">
+                <div class="x-component x-header-text-container x-panel-header-text-container x-panel-header-text-container-default x-box-item x-component-default" unselectable="on" id="sprintReportStoryTable_header_hd" style="right: auto; left: 0px; top: 0px; margin: 0px; width: 905px;"><span id="sprintReportStoryTable_header_hd-textEl" class="x-header-text x-panel-header-text x-panel-header-text-default" unselectable="on">User Stories</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="x-grid-header-ct x-docked x-grid-header-ct-default x-docked-top x-grid-header-ct-docked-top x-grid-header-ct-default-docked-top x-box-layout-ct" style="border-width: 1px; width: 915px; right: auto; left: 0px; top: 29px;" id="headercontainer-1111">
+    <div id="headercontainer-1111-innerCt" class="x-box-inner " role="presentation" style="width: 930px; height: 32px;">
+        <div id="headercontainer-1111-targetEl" class="x-box-target" role="presentation" style="width: 930px;">
+            <div class="x-column-header x-column-header-align-left x-box-item x-column-header-default x-unselectable x-column-header-first" style="border-width: 1px; right: auto; left: 0px; top: 0px; margin: 0px; width: 106px; height: 30px;" id="gridcolumn-1112">
+                <div id="gridcolumn-1112-titleEl" role="presentation" class="x-column-header-inner" style="padding-top: 9px; padding-bottom: 9px;"><span id="gridcolumn-1112-textEl" class="x-column-header-text">Feature</span></div>
+            </div>
+            <div class="x-column-header x-column-header-align-left x-box-item x-column-header-default x-unselectable" style="border-width: 1px; right: auto; left: 106px; top: 0px; margin: 0px; width: 105px; height: 30px;" id="templatecolumn-1113">
+                <div id="templatecolumn-1113-titleEl" role="presentation" class="x-column-header-inner" style="padding-top: 9px; padding-bottom: 9px;"><span id="templatecolumn-1113-textEl" class="x-column-header-text">ID</span></div>
+            </div>
+            <div class="x-column-header x-column-header-align-left x-box-item x-column-header-default x-unselectable" style="border-width: 1px; right: auto; left: 211px; top: 0px; margin: 0px; width: 157px; height: 30px;" id="gridcolumn-1114">
+                <div id="gridcolumn-1114-titleEl" role="presentation" class="x-column-header-inner" style="padding-top: 9px; padding-bottom: 9px;"><span id="gridcolumn-1114-textEl" class="x-column-header-text">Name</span></div>
+            </div>
+            <div class="x-column-header x-column-header-align-left x-box-item x-column-header-default x-unselectable" style="border-width: 1px; right: auto; left: 368px; top: 0px; margin: 0px; width: 52px; height: 30px;" id="gridcolumn-1115">
+                <div id="gridcolumn-1115-titleEl" role="presentation" class="x-column-header-inner" style="padding-top: 9px; padding-bottom: 9px;"><span id="gridcolumn-1115-textEl" class="x-column-header-text">Points</span></div>
+            </div>
+            <div class="x-column-header x-column-header-align-left x-box-item x-column-header-default x-unselectable" style="border-width: 1px; right: auto; left: 420px; top: 0px; margin: 0px; width: 78px; height: 30px;" id="gridcolumn-1116">
+                <div id="gridcolumn-1116-titleEl" role="presentation" class="x-column-header-inner" style="padding-top: 9px; padding-bottom: 9px;"><span id="gridcolumn-1116-textEl" class="x-column-header-text">Plan/Add</span></div>
+            </div>
+            <div class="x-column-header x-column-header-align-left x-box-item x-column-header-default x-unselectable" style="border-width: 1px; right: auto; left: 498px; top: 0px; margin: 0px; width: 52px;" id="gridcolumn-1117">
+                <div id="gridcolumn-1117-titleEl" role="presentation" class="x-column-header-inner"><span id="gridcolumn-1117-textEl" class="x-column-header-text"># of Defects</span></div>
+            </div>
+            <div class="x-column-header x-column-header-align-left x-box-item x-column-header-default x-unselectable" style="border-width: 1px; right: auto; left: 550px; top: 0px; margin: 0px; width: 261px; height: 30px;" id="gridcolumn-1118">
+                <div id="gridcolumn-1118-titleEl" role="presentation" class="x-column-header-inner" style="padding-top: 9px; padding-bottom: 9px;"><span id="gridcolumn-1118-textEl" class="x-column-header-text">Review Feedback</span></div>
+            </div>
+            <div class="x-column-header x-column-header-align-left x-box-item x-column-header-default x-unselectable x-column-header-last" style="border-width: 1px; right: auto; left: 811px; top: 0px; margin: 0px; width: 104px; height: 30px;" id="gridcolumn-1119">
+                <div id="gridcolumn-1119-titleEl" role="presentation" class="x-column-header-inner" style="padding-top: 9px; padding-bottom: 9px;"><span id="gridcolumn-1119-textEl" class="x-column-header-text">Schedule State</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="sprintReportStoryTable-body" class="x-panel-body x-grid-with-col-lines x-grid-with-row-lines x-grid-body x-panel-body-default x-layout-fit x-panel-body-default" role="presentation" style="overflow-y: auto; width: 915px; left: 0px; top: 59px; height: 303px;">
+    <div class="x-grid-view x-fit-item x-grid-view-default x-unselectable" id="rallygridview-1120" tabindex="-1" style="overflow: auto; margin: 0px; width: 913px;">
+        <table id="rallygridview-1120-table" class="x-rallygridview-1120-table x-grid-table" border="0" cellspacing="0" cellpadding="0" style="width: 915px;">
+            <colgroup role="presentation">
+                <col role="presentation" class="x-grid-cell-headerId-gridcolumn-1112" style="width:106px">
+            </colgroup>
+            <colgroup role="presentation">
+                <col role="presentation" class="x-grid-cell-headerId-templatecolumn-1113" style="width:105px">
+            </colgroup>
+            <colgroup role="presentation">
+                <col role="presentation" class="x-grid-cell-headerId-gridcolumn-1114" style="width:157px">
+            </colgroup>
+            <colgroup role="presentation">
+                <col role="presentation" class="x-grid-cell-headerId-gridcolumn-1115" style="width:52px">
+            </colgroup>
+            <colgroup role="presentation">
+                <col role="presentation" class="x-grid-cell-headerId-gridcolumn-1116" style="width:78px">
+            </colgroup>
+            <colgroup role="presentation">
+                <col role="presentation" class="x-grid-cell-headerId-gridcolumn-1117" style="width:52px">
+            </colgroup>
+            <colgroup role="presentation">
+                <col role="presentation" class="x-grid-cell-headerId-gridcolumn-1118" style="width:261px">
+            </colgroup>
+            <colgroup role="presentation">
+                <col role="presentation" class="x-grid-cell-headerId-gridcolumn-1119" style="width:104px">
+            </colgroup>
+            <tbody id="rallygridview-1120-body">
+                <tr id="rallygridview-1120-record-ext-record-187" data-boundview="rallygridview-1120" data-recordid="ext-record-187" data-recordindex="0" class="x-grid-row  x-grid-data-row" tabindex="-1">
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1112 x-grid-cell-first x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">plugin custom index value manager</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-templatecolumn-1113 x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;"><span class="formatted-id-template"><a class="formatted-id-link" href="https://rally1.rallydev.com/#/61156076963d/detail/userstory/61213426399"><span class="artifact-icon icon-story"></span>US23871</a>
+                            </span>
+                        </div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1114 x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">Remove drop down values for selected indexing field</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1115 x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">2</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1116 x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">&nbsp;</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1117 x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">0</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1118 x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">Ability to add or remove drop down values for selected indexing field</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1119 x-grid-cell-last x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">Accepted</div>
+                    </td>
+                </tr>
+                <tr id="rallygridview-1120-record-ext-record-188" data-boundview="rallygridview-1120" data-recordid="ext-record-188" data-recordindex="1" class="x-grid-row x-grid-row-alt x-grid-data-row" tabindex="-1">
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1112 x-grid-cell-first x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">&nbsp;</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-templatecolumn-1113 x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;"><span class="formatted-id-template"><a class="formatted-id-link" href="https://rally1.rallydev.com/#/61156076963d/detail/userstory/61780401904"><span class="artifact-icon icon-story"></span>US24444</a>
+                            </span>
+                        </div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1114 x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">Date effective relationship between route and facility</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1115 x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">&nbsp;</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1116 x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">&nbsp;</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1117 x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">0</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1118 x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">&nbsp;</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1119 x-grid-cell-last x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">Backlog</div>
+                    </td>
+                </tr>
+                <tr id="rallygridview-1120-record-ext-record-189" data-boundview="rallygridview-1120" data-recordid="ext-record-189" data-recordindex="2" class="x-grid-row  x-grid-data-row" tabindex="-1">
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1112 x-grid-cell-first x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">NA Retrieval - Bulk</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-templatecolumn-1113 x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;"><span class="formatted-id-template"><a class="formatted-id-link" href="https://rally1.rallydev.com/#/61156076963d/detail/userstory/61213644059"><span class="artifact-icon icon-story"></span>US24127</a>
+                            </span>
+                        </div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1114 x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">Process retrieval request offline</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1115 x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">0</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1116 x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">&nbsp;</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1117 x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">0</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1118 x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">5. Ability to submit the reqeust and allow for offline processing of the request to search images and output them into a share folder and send out a notification to user who submitted the reqeust.</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1119 x-grid-cell-last x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">Backlog</div>
+                    </td>
+                </tr>
+                <tr id="rallygridview-1120-record-ext-record-190" data-boundview="rallygridview-1120" data-recordid="ext-record-190" data-recordindex="3" class="x-grid-row x-grid-row-alt x-grid-data-row" tabindex="-1">
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1112 x-grid-cell-first x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">NA Retrieval - Bulk</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-templatecolumn-1113 x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;"><span class="formatted-id-template"><a class="formatted-id-link" href="https://rally1.rallydev.com/#/61156076963d/detail/userstory/61213644194"><span class="artifact-icon icon-story"></span>US24128</a>
+                            </span>
+                        </div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1114 x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">Send search results (records and images) to share location</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1115 x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">0</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1116 x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">&nbsp;</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1117 x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">0</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1118 x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">5. Ability to submit the reqeust and allow for offline processing of the request to search images and output them into a share folder and send out a notification to user who submitted the reqeust.</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1119 x-grid-cell-last x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">Backlog</div>
+                    </td>
+                </tr>
+                <tr id="rallygridview-1120-record-ext-record-191" data-boundview="rallygridview-1120" data-recordid="ext-record-191" data-recordindex="4" class="x-grid-row  x-grid-data-row" tabindex="-1">
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1112 x-grid-cell-first x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">NA Retrieval - Bulk</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-templatecolumn-1113 x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;"><span class="formatted-id-template"><a class="formatted-id-link" href="https://rally1.rallydev.com/#/61156076963d/detail/userstory/61213644295"><span class="artifact-icon icon-story"></span>US24129</a>
+                            </span>
+                        </div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1114 x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">Upload text file for bulk search</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1115 x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">0</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1116 x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">&nbsp;</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1117 x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">0</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1118 x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">4. Ability to upload a text file with the header of column names and values to be searched.</div>
+                    </td>
+                    <td class="x-grid-cell x-grid-td x-grid-cell-headerId-gridcolumn-1119 x-grid-cell-last x-unselectable">
+                        <div unselectable="on" class="x-grid-cell-inner " style="text-align:left;">Backlog</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body></html>

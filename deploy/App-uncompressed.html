@@ -214,7 +214,7 @@
         ],
         layout: {
             type: 'hbox',
-            align: 'pack'
+            align: 'center'
         },
 
         config: {
@@ -229,13 +229,15 @@
         },
 
         loadCharts: function() {
+            var w = this.getWidth()/2;
+
             if (this.getIterationId() > 0) {
                 this.items.getAt(0).removeAll();
                 var iters = [this.getIterationId()];
                 var iterBurn = Ext.create("PepsiCo.app.sprintreport.IterationBurndownPanel", {
                     iterations: iters,
-                    reportWidth: 400,
-                    reportHeight: 450
+                    reportWidth: w,
+                    reportHeight: w*1.15
                 });
                 iterBurn.loadChart();
                 this.items.getAt(0).add(iterBurn);
@@ -246,8 +248,8 @@
                 var rels = [this.getReleaseId()];
                 var rCfd = Ext.create('PepsiCo.app.sprintreport.ReleaseCfdPanel', {
                     releases: rels,
-                    reportWidth: 400,
-                    reportHeight: 450
+                    reportWidth: w,
+                    reportHeight: w*1.15
                 });
 
                 rCfd.loadChart();
@@ -256,6 +258,7 @@
         }
     });
 })();
+
                 (function() {
     var Ext = window.Ext4 || window.Ext;
 
@@ -263,11 +266,13 @@
         extend: 'Ext.panel.Panel',
         alias: 'widget.sprintrepormetricsrow',
         cls: 'metricsRowPanel',
-        width: 915,
-        height: 190,
-        title: "Sprint Metrics",
-        border: 0,
-        collapsible: false,
+        config: {
+            width: 915,
+            height: 190,
+            title: "Sprint Metrics",
+            border: 0,
+            collapsible: false,
+        },
         defaults: {
             // applied to each contained panel
             bodyStyle: 'padding: 5px; font-size: 10px;'
@@ -276,7 +281,6 @@
             type: 'hbox',
             align: 'stretch'
         },
-        renderTo: Ext.getBody(), // document.body,
         items: [ {
             xtype: 'panel',
             border: 0,
@@ -291,7 +295,13 @@
             xtype: 'panel',
             border: 0,
             flex: 1
-        } ]
+        } ],
+
+        constructor: function(config) {
+            this.mergeConfig(config);
+            this.initConfig(config);
+            this.callParent(arguments);
+        }
     });
 })();
 
@@ -304,67 +314,79 @@
         alias: 'widget.pepsicostorygrid',
 //        cls: 'sprint-report-story-grid',
 
-        showPagingToolbar: false,
-        showRowActionsColumn: false,
-        editable: false,
-        store: null,
-        storeConfig: {
-            pageSize: 5000
-        },
-        columnLines: true,
-        width: 915,
-        bodyStyle: 'margin-bottom: 25px;',
-        title: 'User Stories',
-        columnCfgs: [
-            {
-                text: 'Feature',
-                dataIndex: 'FeatureName',
-                flex: 2
+        config: {
+            showPagingToolbar: false,
+            showRowActionsColumn: false,
+            overflowY: 'auto',
+            editable: false,
+            store: null,
+            storeConfig: {
+                pageSize: 5000
             },
-            {
-                xtype: 'templatecolumn',
-                text: 'ID',
-                dataIndex: 'FormattedID',
-                tpl: Ext.create('Rally.ui.renderer.template.FormattedIDTemplate'),
-                flex: 2
-            },
-            {
-                text: 'Name',
-                dataIndex: 'Name',
-                flex: 3
-            },
-            {
-                text: 'Points',
-                dataIndex: 'PlanEstimate',
-                flex: 1
-            },
-            {
-                text: 'Plan/Add',
-                dataIndex: 'Added',
-                flex: 1.5
-            },
-            {
-                text: '# of Defects',
-                dataIndex: 'Defects',
-                renderer: function(value) {
-                    return value.Count;
+            sortableColumns: false,
+            border: 2,
+            columnLines: true,
+            width: 915,
+            bodyStyle: 'margin-bottom: 25px;',
+            title: 'User Stories',
+            columnCfgs: [
+                {
+                    text: 'Feature',
+                    dataIndex: 'FeatureName',
+                    flex: 2
                 },
-                flex: 1
-            },
-            {
-                text: 'Review Feedback',
-                dataIndex: 'Notes',
-                flex: 5
-            },
-            {
-                text: 'Schedule State',
-                dataIndex: 'ScheduleState',
-                flex: 2
-            }
-        ],
+                {
+                    xtype: 'templatecolumn',
+                    text: 'ID',
+                    dataIndex: 'FormattedID',
+                    tpl: Ext.create('Rally.ui.renderer.template.FormattedIDTemplate'),
+                    flex: 2
+                },
+                {
+                    text: 'Name',
+                    dataIndex: 'Name',
+                    flex: 3
+                },
+                {
+                    text: 'Points',
+                    dataIndex: 'PlanEstimate',
+                    flex: 1
+                },
+                {
+                    text: 'Plan/Add',
+                    dataIndex: 'Added',
+                    flex: 1.5
+                },
+                {
+                    text: '# of Defects',
+                    dataIndex: 'Defects',
+                    renderer: function(value) {
+                        return value.Count;
+                    },
+                    flex: 1
+                },
+                {
+                    text: 'Review Feedback',
+                    dataIndex: 'Notes',
+                    flex: 5
+                },
+                {
+                    text: 'Schedule State',
+                    dataIndex: 'ScheduleState',
+                    flex: 2
+                }
+            ]
+        },
         
+        plugins: [{
+            ptype: 'rallygridprintpage',
+            defaultTitle: 'Sprint Report',
+            gridSelector: 'sprintReportStoryTable'
+        }],
+
         constructor: function(config) {
             this.mergeConfig(config);
+            this.initConfig(config);
             this.callParent(arguments);
         }
     });
@@ -610,285 +632,231 @@
 
 
                 (function() {
+    var REPORT_WIDTH = 768;
+    
     var Ext = window.Ext4 || window.Ext;
 
-    var gridConfig = {
-        itemId: 'sprintReportStoryTable',
-        id: 'sprintReportStoryTable',
-        showPagingToolbar: false,
-        overflowY: 'auto',
-        showRowActionsColumn: false,
-        editable: false,
-        store: null,
-        storeConfig: {
-            pageSize: 5000
-        },
-        sortableColumns: false,
-        border: 2,
-        columnLines: true,
-        layout: 'fit',
-        width: 915,
-        margin: '0 0 25 0',
-        title: 'User Stories',
-        plugins: [{
-            ptype: 'rallygridprintpage',
-            defaultTitle: 'Sprint Report',
-            gridSelector: 'sprintReportStoryTable'
-        }],
-        columnCfgs: [{
-                text: 'Feature',
-                dataIndex: 'FeatureName',
-                flex: 2
-            },
-            {
-                xtype: 'templatecolumn',
-                text: 'ID',
-                dataIndex: 'FormattedID',
-                tpl: Ext.create('Rally.ui.renderer.template.FormattedIDTemplate'),
-                flex: 2
-            },
-            {
-                text: 'Name',
-                dataIndex: 'Name',
-                flex: 3
-            },
-            {
-                text: 'Points',
-                dataIndex: 'PlanEstimate',
-                flex: 1
-            },
-            {
-                text: 'Plan/Add',
-                dataIndex: 'Added',
-                flex: 1.5
-            },
-            {
-                text: '# of Defects',
-                dataIndex: 'Defects',
-                renderer: function(value) {
-                    return value.Count;
-                },
-                flex: 1
-            },
-            {
-                text: 'Review Feedback',
-                dataIndex: 'Notes',
-                flex: 5
-            },
-            {
-                text: 'Schedule State',
-                dataIndex: 'ScheduleState',
-                flex: 2
-            }
-        ]
-    };
+    Ext.define('PepsiCo.app.sprintreport.SprintReportPanel', {
+             extend: 'Ext.panel.Panel',
+             alias: 'widget.sprintreport',
+             cls: 'sprint-report',
+             items: [
+                     {
+                     xtype: 'container',
+                     itemId: 'menuBar',
+                     width: REPORT_WIDTH
+                     },
+                     {
+                     xtype: 'container',
+                     itemId: 'reportheader'
+                     },
+                     {
+                     xtype: 'container',
+                     itemId: 'metricsrow'
+                     },
+                     {
+                     xtype: 'container',
+                     itemId: 'chartsrow'
+                     },
+                     {
+                     xtype: 'container',
+                     itemId: 'storiesrow'
+                     },
+                     {
+                     xtype: 'container',
+                     //html: 'Footer Row',
+                     itemId: 'footerrow',
+                     height: 100
+                     }
+                     ],
+             layout: {
+             type: 'vbox',
+             pack: 'center'
+             // align: 'center'
+             },
 
-    Ext.define('SprintReportApp', {
-        extend: 'Rally.app.App',
-        componentCls: 'app',
-        items: [{
-                xtype: 'container',
-                itemId: 'menuBar',
-                width: 915
+            iterationBox: null,
+            iterationObjId: null,
+            releaseBox: null,
+            stories: null,
+            iterationInfoRow: null,
+            metricsRow: null,
+            chartsRow: null,
+            storyGrid: null,
+            storyTable: null,
+            storyPointsTable: null,
+            tasksTable: null,
+        
+             config: {
+             },
+
+             constructor: function(cfg) {
+
+                 this.mergeConfig(cfg);
+                 this.initConfig(cfg);
+                 this.setIterations([]);
+                 this.callParent(arguments);
+             },
+
+            loadReport: function() {
+                this._createMetricsRow();
+                this._createIterationInfo();
+                this._createChartsRow();
+                this._createIterationComboBox();
+                this._createReleaseComboBox();
+                this._createPrintButton();
             },
-            {
-                xtype: 'container',
-                itemId: 'reportheader'
-            },
-            {
-                xtype: 'container',
-                itemId: 'metricsrow'
-            },
-            {
-                xtype: 'container',
-                itemId: 'chartsrow'
-            }, {
-                xtype: 'container',
-                itemId: 'storiesrow'
-            }, {
-                xtype: 'container',
-                //html: 'Footer Row',
-                itemId: 'footerrow',
-                height: 100
-            }
-        ],
-        layout: {
-            type: 'vbox',
-            pack: 'center',
-            align: 'center'
-        },
 
-        iterationBox: null,
-        iterationObjId: null,
-        releaseBox: null,
-        stories: null,
-        iterationInfoRow: null,
-        metricsRow: null,
-        chartsRow: null,
-        storyGrid: null,
-        storyTable: null,
-        storyPointsTable: null,
-        tasksTable: null,
-
-        // Launch the application
-        launch: function() {
-
-            this._createMetricsRow();
-            this._createIterationInfo();
-            this._createChartsRow();
-            this._createIterationComboBox();
-            this._createReleaseComboBox();
-            this._createPrintButton();
-        },
-
-        // Create and add the iteration information row
-        _createIterationInfo: function() {
-            var row = Ext.create('PepsiCo.app.sprintreport.IterationInfo', {
+            // Create and add the iteration information row
+            _createIterationInfo: function() {
+                var row = Ext.create('PepsiCo.app.sprintreport.IterationInfo', {
                 title: 'Sprint Information',
                 border: 0,
                 margin: '0 0 15 0',
-                width: 915
-            });
-            this.iterationInfoRow = this.down('#reportheader').add(row);
-        },
+                width: REPORT_WIDTH
+                    });
+                this.iterationInfoRow = this.down('#reportheader').add(row);
+            },
 
-        _createPrintButton: function() {
-            var me = this;
-            var button = Ext.create('Rally.ui.Button', {
+            _createPrintButton: function() {
+                var me = this;
+                var button = Ext.create('Rally.ui.Button', {
                 text: 'Print',
                 handler: this._printPage,
                 scope: me,
-                //                    plugins: [ { ptype: 'rallyprint', defaultTitle: 'Sprint Report'} ],
+                    //                    plugins: [ { ptype: 'rallyprint', defaultTitle: 'Sprint Report'} ],
                 style: { float: 'right' }
-            });
-            this.down('#menuBar').add(button);
-        },
+                    });
+                this.down('#menuBar').add(button);
+            },
 
-        _printPage: function() {
-//            var print = Ext.create('Rally.ui.plugin.print.Print', {
-//                defaultTitle: 'Sprint Report'
-//            });
-//            print.setCmp(this);
-//            print.openPrintPage();
-            console.log('This = %o\n', this);
-            this.storyGrid.openPrintPage({defaultTitle: 'Sprint Report'});
-        },
+            _printPage: function() {
+                //            var print = Ext.create('Rally.ui.plugin.print.Print', {
+                //                defaultTitle: 'Sprint Report'
+                //            });
+                //            print.setCmp(this);
+                //            print.openPrintPage();
+                console.log('This = %o\n', this);
+                console.log('HTML = \n%o\n', this.metricsRow.getEl().getHTML() + this.storyGrid.getEl().getHTML());
+                //            console.log('HTML = \n%o\n', document.documentElement.innerHTML);
+                //this.storyGrid.openPrintPage({ defaultTitle: 'Sprint Report' });
+                // window.print();
+            },
 
-        // Create and add the metrics row
-        _createMetricsRow: function() {
-            var metrow = Ext.create('PepsiCo.apps.sprintreport.SprintMetricsRow', {});
-            this.metricsRow = this.down('#metricsrow').add(metrow);
-        },
+                // Create and add the metrics row
+            _createMetricsRow: function() {
+                var metrow = Ext.create('PepsiCo.apps.sprintreport.SprintMetricsRow', { width: REPORT_WIDTH});
+                this.metricsRow = this.down('#metricsrow').add(metrow);
+            },
 
-        // Add the row for the charts that will be displayed
-        _createChartsRow: function() {
-            var row = Ext.create('PepsiCo.app.sprintreport.SprintReportCharts', {
+                // Add the row for the charts that will be displayed
+            _createChartsRow: function() {
+                var row = Ext.create('PepsiCo.app.sprintreport.SprintReportCharts', {
                 title: 'Progress Charts',
                 border: 0,
                 margin: '0 0 15 0',
-                width: 915
-            });
-            this.chartsRow = this.down('#chartsrow').add(row);
-        },
+                width: REPORT_WIDTH
+                    });
+                this.chartsRow = this.down('#chartsrow').add(row);
+            },
 
-        // Add the IterationComboBox to the header, and set its listener.
-        _createIterationComboBox: function() {
-            var me = this;
-            this.iterationBox = Ext.create('Rally.ui.combobox.IterationComboBox', {
+                // Add the IterationComboBox to the header, and set its listener.
+            _createIterationComboBox: function() {
+                var me = this;
+                this.iterationBox = Ext.create('Rally.ui.combobox.IterationComboBox', {
                 listeners: {
-                    change: this._iterationChange,
-                    scope: me
-                },
+                change: this._iterationChange,
+                scope: me
+                    },
                 style: { float: 'left' }
-            });
-            this.iterationBox.getStore().load();
-            this.down('#menuBar').add(this.iterationBox);
-        },
+                    });
+                this.iterationBox.getStore().load();
+                this.down('#menuBar').add(this.iterationBox);
+            },
 
-        _iterationChange: function(source, newValue /*, oldValue */ ) {
-            var objIdArr = newValue.split('/');
-            this.iterationObjId = objIdArr[objIdArr.length - 1];
+            _iterationChange: function(source, newValue /*, oldValue */ ) {
+                var objIdArr = newValue.split('/');
+                this.iterationObjId = objIdArr[objIdArr.length - 1];
 
-            this.iterationInfoRow._setIterationId(this.iterationObjId);
-            this.iterationInfoRow._fetchIteration();
+                this.iterationInfoRow._setIterationId(this.iterationObjId);
+                this.iterationInfoRow._fetchIteration();
 
 
-            this.chartsRow.setIterationId(this.iterationObjId);
-            this.chartsRow.loadCharts();
+                this.chartsRow.setIterationId(this.iterationObjId);
+                this.chartsRow.loadCharts();
 
-            this._loadStoryData();
-        },
+                this._loadStoryData();
+            },
 
-        // Add the ReleaseComboBox to the header, and set its listener.
-        _createReleaseComboBox: function() {
-            var me = this;
-            this.releaseBox = Ext.create('Rally.ui.combobox.ReleaseComboBox', {
+                // Add the ReleaseComboBox to the header, and set its listener.
+            _createReleaseComboBox: function() {
+                var me = this;
+                this.releaseBox = Ext.create('Rally.ui.combobox.ReleaseComboBox', {
                 listeners: {
-                    change: this._releaseChange,
-                    scope: me
+                change: this._releaseChange,
+                scope: me
+                    }
+                    });
+                this.down('#menuBar').add(this.releaseBox);
+            },
+
+            _releaseChange: function(source, newValue /*, oldValue */ ) {
+                var objIdArr = newValue.split('/');
+                var relObjId = objIdArr[objIdArr.length - 1];
+
+                this.chartsRow.setReleaseId(relObjId);
+                this.chartsRow.loadCharts();
+            },
+
+            _loadStoryData: function() {
+                this.metricsRow.items.getAt(0).removeAll(true);
+                this.metricsRow.items.getAt(1).removeAll(true);
+                this.metricsRow.items.getAt(2).removeAll(true);
+                this.storyTable = null;
+                this.storyPointsTable = null;
+                this.tasksTable = null;
+
+                if (this.storyGrid) {
+                    this.storyGrid.removeAll();
+                    this.storyGrid.close();
+                    this.remove(this.storyGrid);
                 }
-            });
-            this.down('#menuBar').add(this.releaseBox);
-        },
 
-        _releaseChange: function(source, newValue /*, oldValue */ ) {
-            var objIdArr = newValue.split('/');
-            var relObjId = objIdArr[objIdArr.length - 1];
-
-            this.chartsRow.setReleaseId(relObjId);
-            this.chartsRow.loadCharts();
-        },
-
-        _loadStoryData: function() {
-            this.metricsRow.items.getAt(0).removeAll(true);
-            this.metricsRow.items.getAt(1).removeAll(true);
-            this.metricsRow.items.getAt(2).removeAll(true);
-            this.storyTable = null;
-            this.storyPointsTable = null;
-            this.tasksTable = null;
-
-            if (this.storyGrid) {
-                this.storyGrid.removeAll();
-                this.storyGrid.close();
-                this.remove(this.storyGrid);
-            }
-
-            var me = this;
-            this.stories = Ext.create('PepsiCo.app.sprintreport.StoryStore', {
+                var me = this;
+                this.stories = Ext.create('PepsiCo.app.sprintreport.StoryStore', {
                 listeners: {
-                    loaded: this._loadReportWidgets,
-                    scope: me
-                },
+                loaded: this._loadReportWidgets,
+                scope: me
+                    },
                 iterationValue: this.iterationObjId
-            });
-            this.stories.load();
-        },
+                    });
+                this.stories.load();
+            },
 
-        _loadReportWidgets: function() {
-            this._loadStoryMetrics();
-            this._loadFeatureStoryTable();
-        },
+            _loadReportWidgets: function() {
+                this._loadStoryMetrics();
+                this._loadFeatureStoryTable();
+            },
 
-        // Load the Story table
-        _loadFeatureStoryTable: function() {
-            var records = this.stories._getStoryRecordsStore();
-            gridConfig.store = records;
+                // Load the Story table
+            _loadFeatureStoryTable: function() {
+                var records = this.stories._getStoryRecordsStore();
+                //            gridConfig.store = records;
 
-            //            this.storyGrid = Ext.create('PepsiCo.app.sprintreport.StoryGrid', { store: records });
-            var grid = Ext.create('Rally.ui.grid.Grid', gridConfig);
-            this.storyGrid = this.down('#storiesrow').add(grid);
+                var grid = Ext.create('PepsiCo.app.sprintreport.StoryGrid', { store: records, width: REPORT_WIDTH });
+                //            var grid = Ext.create('Rally.ui.grid.Grid', gridConfig);
+                this.storyGrid = this.down('#storiesrow').add(grid);
+            },
 
-        },
+            _loadStoryMetrics: function() {
+                this._loadStoryCounts();
+                this._loadStoryPoints();
+                this._loadTaskHours();
+            },
 
-        _loadStoryMetrics: function() {
-            this._loadStoryCounts();
-            this._loadStoryPoints();
-            this._loadTaskHours();
-        },
-
-        _loadStoryCounts: function() {
-            if (this.storyTable === null) {
-                this.storyTable = Ext.create('PepsiCo.app.sprintreport.StoryMetricStories', {
+            _loadStoryCounts: function() {
+                if (this.storyTable === null) {
+                    this.storyTable = Ext.create('PepsiCo.app.sprintreport.StoryMetricStories', {
                     storyCount: this.stories.storyCount,
                     storiesAdded: this.stories.storiesAdded,
                     storiesAccepted: this.stories.storiesAccepted,
@@ -897,69 +865,85 @@
                     labelColumnTitle: 'Story Counts',
                     valueColumnTitle: 'Value',
                     store: Ext.create('Ext.data.Store', {
-                        model: 'Values',
-                        fields: ['metricType', 'metricValue'],
-                        data: [
-                            { 'metricType': '# Stories Planned', 'metricValue': this.stories.storyCount.toString() },
-                            { 'metricType': '# Stories Added', 'metricValue': this.stories.storiesAdded.toString() },
-                            { 'metricType': '# Stories Accepted', 'metricValue': this.stories.storiesAccepted.toString() },
-                            { 'metricType': '# Stories Not Completed', 'metricValue': this.stories.storiesIncomplete.toString() },
-                            { 'metricType': '% Stories Accepted', 'metricValue': this.stories.storiesPercent.toString() + '%' }
+                    model: 'Values',
+                    fields: ['metricType', 'metricValue'],
+                    data: [
+                        { 'metricType': '# Stories Planned', 'metricValue': this.stories.storyCount.toString() },
+                        { 'metricType': '# Stories Added', 'metricValue': this.stories.storiesAdded.toString() },
+                        { 'metricType': '# Stories Accepted', 'metricValue': this.stories.storiesAccepted.toString() },
+                        { 'metricType': '# Stories Not Completed', 'metricValue': this.stories.storiesIncomplete.toString() },
+                        { 'metricType': '% Stories Accepted', 'metricValue': this.stories.storiesPercent.toString() + '%' }
                         ]
-                    })
-                });
-                this.metricsRow.items.getAt(0).add(this.storyTable);
-            }
-        },
+                        })
+                        });
+                    this.metricsRow.items.getAt(0).add(this.storyTable);
+                }
+            },
 
-        _loadStoryPoints: function() {
-            if (this.storyPointsTable === null) {
-                this.storyPointsTable = Ext.create('PepsiCo.app.sprintreport.StoryMetricStories', {
+            _loadStoryPoints: function() {
+                if (this.storyPointsTable === null) {
+                    this.storyPointsTable = Ext.create('PepsiCo.app.sprintreport.StoryMetricStories', {
                     labelColumnTitle: 'Story Points',
                     valueColumnTitle: 'Value',
                     store: Ext.create('Ext.data.Store', {
-                        model: 'Values',
-                        fields: ['metricType', 'metricValue'],
-                        data: [
-                            { 'metricType': '# Points Planned', 'metricValue': this.stories.storyPoints.toString() },
-                            { 'metricType': '# Points Added', 'metricValue': this.stories.storyPointsAdded.toString() },
-                            { 'metricType': '# Points Accepted', 'metricValue': this.stories.storyPointsAccepted.toString() },
-                            { 'metricType': '# Points Not Completed', 'metricValue': this.stories.storyPointsIncomplete.toString() },
-                            { 'metricType': '% Points Completed', 'metricValue': this.stories.storyPointsPercent.toString() + '%' }
+                    model: 'Values',
+                    fields: ['metricType', 'metricValue'],
+                    data: [
+                        { 'metricType': '# Points Planned', 'metricValue': this.stories.storyPoints.toString() },
+                        { 'metricType': '# Points Added', 'metricValue': this.stories.storyPointsAdded.toString() },
+                        { 'metricType': '# Points Accepted', 'metricValue': this.stories.storyPointsAccepted.toString() },
+                        { 'metricType': '# Points Not Completed', 'metricValue': this.stories.storyPointsIncomplete.toString() },
+                        { 'metricType': '% Points Completed', 'metricValue': this.stories.storyPointsPercent.toString() + '%' }
                         ]
-                    })
-                });
-                this.metricsRow.items.getAt(1).add(this.storyPointsTable);
-            }
-        },
+                        })
+                        });
+                    this.metricsRow.items.getAt(1).add(this.storyPointsTable);
+                }
+            },
 
-        _loadTaskHours: function() {
+            _loadTaskHours: function() {
 
-            var plan = this.stories.plannedHours;
-            var todo = this.stories.todoHours;
-            var actual = this.stories.actualHours;
+                var plan = this.stories.plannedHours;
+                var todo = this.stories.todoHours;
+                var actual = this.stories.actualHours;
 
-            var percent = (plan === 0) ? 0.00 : Math.round((actual / plan) * 100);
+                var percent = (plan === 0) ? 0.00 : Math.round((actual / plan) * 100);
 
-            if (this.tasksTable === null) {
-                this.tasksTable = Ext.create('PepsiCo.app.sprintreport.StoryMetricStories', {
+                if (this.tasksTable === null) {
+                    this.tasksTable = Ext.create('PepsiCo.app.sprintreport.StoryMetricStories', {
                     labelColumnTitle: 'Task Hours',
                     valueColumnTitle: 'Value',
                     store: Ext.create('Ext.data.Store', {
-                        model: 'Values',
-                        fields: ['metricType', 'metricValue'],
-                        data: [
-                            { 'metricType': 'Planned Task Hours', 'metricValue': plan.toString() },
-                            { 'metricType': 'To-Do Task Hours', 'metricValue': todo.toString() },
-                            { 'metricType': 'Actual Task Hours', 'metricValue': actual.toString() },
-                            { 'metricType': 'Actual/Planned', 'metricValue': percent.toString() + '%' }
+                    model: 'Values',
+                    fields: ['metricType', 'metricValue'],
+                    data: [
+                        { 'metricType': 'Planned Task Hours', 'metricValue': plan.toString() },
+                        { 'metricType': 'To-Do Task Hours', 'metricValue': todo.toString() },
+                        { 'metricType': 'Actual Task Hours', 'metricValue': actual.toString() },
+                        { 'metricType': 'Actual/Planned', 'metricValue': percent.toString() + '%' }
                         ]
-                    })
-                });
-                this.metricsRow.items.getAt(2).add(this.tasksTable);
+                        })
+                        });
+                    this.metricsRow.items.getAt(2).add(this.tasksTable);
+                }
             }
-        }
 
+        });
+})();
+
+                (function() {
+    var Ext = window.Ext4 || window.Ext;
+
+    Ext.define('SprintReportApp', {
+        extend: 'Rally.app.App',
+        componentCls: 'app',
+
+
+        // Launch the application
+        launch: function() {
+            var report = Ext.create('PepsiCo.app.sprintreport.SprintReportPanel',{});
+            report.loadReport();
+        }
     });
 })();
 

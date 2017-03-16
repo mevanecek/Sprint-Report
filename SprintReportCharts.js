@@ -28,7 +28,7 @@
         ],
         layout: {
             type: 'hbox',
-            align: 'pack'
+            align: 'center'
         },
 
         config: {
@@ -43,13 +43,15 @@
         },
 
         loadCharts: function() {
+            var w = this.getWidth()/2;
+
             if (this.getIterationId() > 0) {
                 this.items.getAt(0).removeAll();
                 var iters = [this.getIterationId()];
                 var iterBurn = Ext.create("PepsiCo.app.sprintreport.IterationBurndownPanel", {
                     iterations: iters,
-                    reportWidth: 400,
-                    reportHeight: 450
+                    reportWidth: w,
+                    reportHeight: w*1.15
                 });
                 iterBurn.loadChart();
                 this.items.getAt(0).add(iterBurn);
@@ -60,8 +62,8 @@
                 var rels = [this.getReleaseId()];
                 var rCfd = Ext.create('PepsiCo.app.sprintreport.ReleaseCfdPanel', {
                     releases: rels,
-                    reportWidth: 400,
-                    reportHeight: 450
+                    reportWidth: w,
+                    reportHeight: w*1.15
                 });
 
                 rCfd.loadChart();

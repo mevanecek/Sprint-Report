@@ -16,6 +16,7 @@
 		51B3FAAE1E675D2F000B3E9C /* StoryMetricStories.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = StoryMetricStories.js; path = ../StoryMetricStories.js; sourceTree = "<group>"; };
 		51B3FAB11E6A502F000B3E9C /* StoryGrid.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = StoryGrid.js; path = ../StoryGrid.js; sourceTree = "<group>"; };
 		51B3FAB21E6A61E0000B3E9C /* StoryStore.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = StoryStore.js; path = ../StoryStore.js; sourceTree = "<group>"; };
+		51D05E381E79EDD70067583D /* SprintReportPanel.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = SprintReportPanel.js; path = ../SprintReportPanel.js; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -28,6 +29,7 @@
 				5101C1491E6F93D80000CC89 /* SprintReportCharts.js */,
 				51B3FAAE1E675D2F000B3E9C /* StoryMetricStories.js */,
 				51B3FAAC1E672664000B3E9C /* SprintReport.js */,
+				51D05E381E79EDD70067583D /* SprintReportPanel.js */,
 				51B3FAAD1E673868000B3E9C /* SprintMetricsRow.js */,
 				51B3FAB11E6A502F000B3E9C /* StoryGrid.js */,
 				51B3FAB21E6A61E0000B3E9C /* StoryStore.js */,

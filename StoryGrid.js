@@ -6,67 +6,79 @@
         alias: 'widget.pepsicostorygrid',
 //        cls: 'sprint-report-story-grid',
 
-        showPagingToolbar: false,
-        showRowActionsColumn: false,
-        editable: false,
-        store: null,
-        storeConfig: {
-            pageSize: 5000
-        },
-        columnLines: true,
-        width: 915,
-        bodyStyle: 'margin-bottom: 25px;',
-        title: 'User Stories',
-        columnCfgs: [
-            {
-                text: 'Feature',
-                dataIndex: 'FeatureName',
-                flex: 2
+        config: {
+            showPagingToolbar: false,
+            showRowActionsColumn: false,
+            overflowY: 'auto',
+            editable: false,
+            store: null,
+            storeConfig: {
+                pageSize: 5000
             },
-            {
-                xtype: 'templatecolumn',
-                text: 'ID',
-                dataIndex: 'FormattedID',
-                tpl: Ext.create('Rally.ui.renderer.template.FormattedIDTemplate'),
-                flex: 2
-            },
-            {
-                text: 'Name',
-                dataIndex: 'Name',
-                flex: 3
-            },
-            {
-                text: 'Points',
-                dataIndex: 'PlanEstimate',
-                flex: 1
-            },
-            {
-                text: 'Plan/Add',
-                dataIndex: 'Added',
-                flex: 1.5
-            },
-            {
-                text: '# of Defects',
-                dataIndex: 'Defects',
-                renderer: function(value) {
-                    return value.Count;
+            sortableColumns: false,
+            border: 2,
+            columnLines: true,
+            width: 915,
+            bodyStyle: 'margin-bottom: 25px;',
+            title: 'User Stories',
+            columnCfgs: [
+                {
+                    text: 'Feature',
+                    dataIndex: 'FeatureName',
+                    flex: 2
                 },
-                flex: 1
-            },
-            {
-                text: 'Review Feedback',
-                dataIndex: 'Notes',
-                flex: 5
-            },
-            {
-                text: 'Schedule State',
-                dataIndex: 'ScheduleState',
-                flex: 2
-            }
-        ],
+                {
+                    xtype: 'templatecolumn',
+                    text: 'ID',
+                    dataIndex: 'FormattedID',
+                    tpl: Ext.create('Rally.ui.renderer.template.FormattedIDTemplate'),
+                    flex: 2
+                },
+                {
+                    text: 'Name',
+                    dataIndex: 'Name',
+                    flex: 3
+                },
+                {
+                    text: 'Points',
+                    dataIndex: 'PlanEstimate',
+                    flex: 1
+                },
+                {
+                    text: 'Plan/Add',
+                    dataIndex: 'Added',
+                    flex: 1.5
+                },
+                {
+                    text: '# of Defects',
+                    dataIndex: 'Defects',
+                    renderer: function(value) {
+                        return value.Count;
+                    },
+                    flex: 1
+                },
+                {
+                    text: 'Review Feedback',
+                    dataIndex: 'Notes',
+                    flex: 5
+                },
+                {
+                    text: 'Schedule State',
+                    dataIndex: 'ScheduleState',
+                    flex: 2
+                }
+            ]
+        },
         
+        plugins: [{
+            ptype: 'rallygridprintpage',
+            defaultTitle: 'Sprint Report',
+            gridSelector: 'sprintReportStoryTable'
+        }],
+
         constructor: function(config) {
             this.mergeConfig(config);
+            this.initConfig(config);
             this.callParent(arguments);
         }
     });
