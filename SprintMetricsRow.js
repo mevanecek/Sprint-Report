@@ -5,13 +5,12 @@
         extend: 'Ext.panel.Panel',
         alias: 'widget.sprintrepormetricsrow',
         cls: 'metricsRowPanel',
-        config: {
-            width: 915,
-            height: 190,
-            title: "Sprint Metrics",
-            border: 0,
-            collapsible: false,
-        },
+        width: 915,
+        height: 190,
+        title: "Sprint Metrics",
+        border: 0,
+        collapsible: false,
+
         defaults: {
             // applied to each contained panel
             bodyStyle: 'padding: 5px; font-size: 10px;'
@@ -20,21 +19,22 @@
             type: 'hbox',
             align: 'stretch'
         },
-        items: [ {
-            xtype: 'panel',
-            border: 0,
-            flex: 1
-        },
-        {
-            xtype: 'panel',
-            border: 0,
-            flex: 1
-        },
-        {
-            xtype: 'panel',
-            border: 0,
-            flex: 1
-        } ],
+        items: [{
+                xtype: 'panel',
+                border: 0,
+                flex: 1
+            },
+            {
+                xtype: 'panel',
+                border: 0,
+                flex: 1
+            },
+            {
+                xtype: 'panel',
+                border: 0,
+                flex: 1
+            }
+        ],
 
         constructor: function(config) {
             this.mergeConfig(config);
@@ -43,4 +43,3 @@
         }
     });
 })();
-

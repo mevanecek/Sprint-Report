@@ -1,45 +1,26 @@
 (function() {
     var Ext = window.Ext4 || window.Ext;
 
-    const REPORT_WIDTH = 768;
+    const REPORT_WIDTH = 1024;
 
     Ext.define('SprintReportApp', {
         extend: 'Rally.app.App',
         componentCls: 'app',
         alias: 'widget.sprintreport',
         cls: 'sprint-report',
-        items: [
-        {
-            xtype: 'container',
-            itemId: 'menuBar',
-            width: REPORT_WIDTH
-        },
-        {
-            xtype: 'container',
-            itemId: 'reportheader'
-        },
-        {
-            xtype: 'container',
-            itemId: 'metricsrow'
-        },
-        {
-            xtype: 'container',
-            itemId: 'chartsrow'
-        },
-        {
-            xtype: 'container',
-            itemId: 'storiesrow'
-        },
-        {
-            xtype: 'container',
-            itemId: 'footerrow',
-            height: 100
-        }
+        items: [{
+                xtype: 'container',
+                itemId: 'menubar',
+                width: REPORT_WIDTH
+            },
+            {
+                xtype: 'container',
+                itemId: 'reportbody'
+            }
         ],
         layout: {
             type: 'vbox',
             pack: 'center'
-        // align: 'center'
         },
 
         iterationBox: null,
@@ -54,8 +35,13 @@
         storyPointsTable: null,
         tasksTable: null,
 
+        sprintReportPanel: undefined,
+
         // Launch the application
         launch: function() {
+
+            this.sprintReportPanel = Ext.create('PepsiCo.app.sprintreport.SprintReportPanel', {});
+            this.down('#reportbody').add(this.sprintReportPanel);
 
             this._createMetricsRow();
             this._createIterationInfo();
@@ -63,61 +49,15 @@
             this._createIterationComboBox();
             this._createReleaseComboBox();
             this._createPrintButton();
+
+            this.sprintReportPanel.addHeader(this.iterationInfoRow);
+            this.sprintReportPanel.addMetrics(this.metricsRow);
+            this.sprintReportPanel.addCharts(this.chartsRow);
         },
 
-        // Create and add the iteration information row
-        _createIterationInfo: function() {
-            var row = Ext.create('PepsiCo.app.sprintreport.IterationInfo', {
-                title: 'Sprint Information',
-                border: 0,
-                margin: '0 0 15 0',
-                width: REPORT_WIDTH
-            });
-            this.iterationInfoRow = this.down('#reportheader').add(row);
-        },
-
-        _createPrintButton: function() {
-            var me = this;
-            var button = Ext.create('Rally.ui.Button', {
-                text: 'Print',
-                handler: this._printPage,
-                scope: me,
-                //                    plugins: [ { ptype: 'rallyprint', defaultTitle: 'Sprint Report'} ],
-                style: { float: 'right' }
-            });
-            this.down('#menuBar').add(button);
-        },
-
-        _printPage: function() {
-            //            var print = Ext.create('Rally.ui.plugin.print.Print', {
-            //                defaultTitle: 'Sprint Report'
-            //            });
-            //            print.setCmp(this);
-            //            print.openPrintPage();
-            console.log('This = %o\n', this);
-            console.log('HTML = \n%o\n', this.metricsRow.getEl().getHTML() + this.storyGrid.getEl().getHTML());
-//            console.log('HTML = \n%o\n', document.documentElement.innerHTML);
-            //this.storyGrid.openPrintPage({ defaultTitle: 'Sprint Report' });
-            // window.print();
-        },
-
-        // Create and add the metrics row
-        _createMetricsRow: function() {
-            var metrow = Ext.create('PepsiCo.apps.sprintreport.SprintMetricsRow', { width: REPORT_WIDTH});
-            this.metricsRow = this.down('#metricsrow').add(metrow);
-        },
-
-        // Add the row for the charts that will be displayed
-        _createChartsRow: function() {
-            var row = Ext.create('PepsiCo.app.sprintreport.SprintReportCharts', {
-                title: 'Progress Charts',
-                border: 0,
-                margin: '0 0 15 0',
-                width: REPORT_WIDTH
-            });
-            this.chartsRow = this.down('#chartsrow').add(row);
-        },
-
+        /*********************************************************************************
+         * Add the menubar: Iteration combo box, Release combo box, and print button
+         *********************************************************************************/
         // Add the IterationComboBox to the header, and set its listener.
         _createIterationComboBox: function() {
             var me = this;
@@ -129,21 +69,7 @@
                 style: { float: 'left' }
             });
             this.iterationBox.getStore().load();
-            this.down('#menuBar').add(this.iterationBox);
-        },
-
-        _iterationChange: function(source, newValue /*, oldValue */ ) {
-            var objIdArr = newValue.split('/');
-            this.iterationObjId = objIdArr[objIdArr.length - 1];
-
-            this.iterationInfoRow._setIterationId(this.iterationObjId);
-            this.iterationInfoRow._fetchIteration();
-
-
-            this.chartsRow.setIterationId(this.iterationObjId);
-            this.chartsRow.loadCharts();
-
-            this._loadStoryData();
+            this.down('#menubar').add(this.iterationBox);
         },
 
         // Add the ReleaseComboBox to the header, and set its listener.
@@ -155,7 +81,33 @@
                     scope: me
                 }
             });
-            this.down('#menuBar').add(this.releaseBox);
+            this.down('#menubar').add(this.releaseBox);
+        },
+
+        // Create a print button
+        _createPrintButton: function() {
+            var me = this;
+            var button = Ext.create('Rally.ui.Button', {
+                text: 'Print',
+                handler: this._printPage,
+                scope: me,
+                //                    plugins: [ { ptype: 'rallyprint', defaultTitle: 'Sprint Report'} ],
+                style: { float: 'right' }
+            });
+            this.down('#menubar').add(button);
+        },
+
+        _iterationChange: function(source, newValue /*, oldValue */ ) {
+            var objIdArr = newValue.split('/');
+            this.iterationObjId = objIdArr[objIdArr.length - 1];
+
+            this.iterationInfoRow._setIterationId(this.iterationObjId);
+            this.iterationInfoRow._fetchIteration();
+
+            this.chartsRow.setIterationId(this.iterationObjId);
+            this.chartsRow.loadCharts();
+
+            this._loadStoryData();
         },
 
         _releaseChange: function(source, newValue /*, oldValue */ ) {
@@ -165,6 +117,68 @@
             this.chartsRow.setReleaseId(relObjId);
             this.chartsRow.loadCharts();
         },
+
+        _printPage: function() {
+            //            var print = Ext.create('Rally.ui.plugin.print.Print', {
+            //                defaultTitle: 'Sprint Report'
+            //            });
+            //            print.setCmp(this);
+            //            print.openPrintPage();
+            console.log('This = %o\n', this);
+            console.log('HTML = \n%o\n', this.metricsRow.getEl().getHTML() + this.storyGrid.getEl().getHTML());
+            //            console.log('HTML = \n%o\n', document.documentElement.innerHTML);
+            //this.storyGrid.openPrintPage({ defaultTitle: 'Sprint Report' });
+            // window.print();
+        },
+        /*********************************************************************************
+         * End Setup Menubar Section
+         *********************************************************************************/
+
+        /*********************************************************************************
+         * Add the report metrics row, with tables for the metrics to be displayed
+         *********************************************************************************/
+        // Create and add the metrics row
+        _createMetricsRow: function() {
+            this.metricsRow = Ext.create('PepsiCo.apps.sprintreport.SprintMetricsRow', { width: REPORT_WIDTH });
+            // this.down('#metricsrow').add(this.metricsRow);
+        },
+        /*********************************************************************************
+         * End Setup Metrics Section
+         *********************************************************************************/
+
+        /*********************************************************************************
+         * Add the sprint informatoin row, with start and end dates and theme
+         *********************************************************************************/
+        // Create and add the iteration information row
+        _createIterationInfo: function() {
+            this.iterationInfoRow = Ext.create('PepsiCo.app.sprintreport.IterationInfo', {
+                title: 'Sprint Information',
+                border: 0,
+                margin: '0 0 15 0',
+                width: REPORT_WIDTH
+            });
+            // this.iterationInfoRow = this.down('#reportheader').add(row);
+        },
+        /*********************************************************************************
+         * End Setup Sprint Information
+         *********************************************************************************/
+
+        /*********************************************************************************
+         * Add the sprint burndown and release cumulative flow charts
+         *********************************************************************************/
+        // Add the row for the charts that will be displayed
+        _createChartsRow: function() {
+            this.chartsRow = Ext.create('PepsiCo.app.sprintreport.SprintReportCharts', {
+                title: 'Progress Charts',
+                border: 0,
+                margin: '0 0 15 0',
+                width: REPORT_WIDTH
+            });
+            // this.down('#chartsrow').add(this.chartsRow);
+        },
+        /*********************************************************************************
+         * End Setup Sprint charts
+         *********************************************************************************/
 
         _loadStoryData: function() {
             this.metricsRow.items.getAt(0).removeAll(true);
@@ -199,11 +213,11 @@
         // Load the Story table
         _loadFeatureStoryTable: function() {
             var records = this.stories._getStoryRecordsStore();
-//            gridConfig.store = records;
+            //            gridConfig.store = records;
 
-            var grid = Ext.create('PepsiCo.app.sprintreport.StoryGrid', { store: records, width: REPORT_WIDTH });
-//            var grid = Ext.create('Rally.ui.grid.Grid', gridConfig);
-            this.storyGrid = this.down('#storiesrow').add(grid);
+            this.storyGrid = Ext.create('PepsiCo.app.sprintreport.StoryGrid', { store: records, width: REPORT_WIDTH });
+            // this.down('#storiesrow').add(grid);
+            this.sprintReportPanel.addStories(this.storyGrid);
         },
 
         _loadStoryMetrics: function() {
