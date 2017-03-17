@@ -1,7 +1,7 @@
 (function() {
     var Ext = window.Ext4 || window.Ext;
 
-    const REPORT_WIDTH = 1024;
+    var REPORT_WIDTH = 1024;
 
     Ext.define('SprintReportApp', {
         extend: 'Rally.app.App',
@@ -181,9 +181,6 @@
          *********************************************************************************/
 
         _loadStoryData: function() {
-            this.metricsRow.items.getAt(0).removeAll(true);
-            this.metricsRow.items.getAt(1).removeAll(true);
-            this.metricsRow.items.getAt(2).removeAll(true);
             this.storyTable = null;
             this.storyPointsTable = null;
             this.tasksTable = null;
@@ -221,84 +218,10 @@
         },
 
         _loadStoryMetrics: function() {
-            this._loadStoryCounts();
-            this._loadStoryPoints();
-            this._loadTaskHours();
-        },
-
-        _loadStoryCounts: function() {
-            if (this.storyTable === null) {
-                this.storyTable = Ext.create('PepsiCo.app.sprintreport.StoryMetricStories', {
-                    storyCount: this.stories.storyCount,
-                    storiesAdded: this.stories.storiesAdded,
-                    storiesAccepted: this.stories.storiesAccepted,
-                    storiesIncomplete: this.stories.storiesIncomplete,
-                    storiesPercent: this.stories.storiesPercent,
-                    labelColumnTitle: 'Story Counts',
-                    valueColumnTitle: 'Value',
-                    store: Ext.create('Ext.data.Store', {
-                        model: 'Values',
-                        fields: ['metricType', 'metricValue'],
-                        data: [
-                            { 'metricType': '# Stories Planned', 'metricValue': this.stories.storyCount.toString() },
-                            { 'metricType': '# Stories Added', 'metricValue': this.stories.storiesAdded.toString() },
-                            { 'metricType': '# Stories Accepted', 'metricValue': this.stories.storiesAccepted.toString() },
-                            { 'metricType': '# Stories Not Completed', 'metricValue': this.stories.storiesIncomplete.toString() },
-                            { 'metricType': '% Stories Accepted', 'metricValue': this.stories.storiesPercent.toString() + '%' }
-                        ]
-                    })
-                });
-                this.metricsRow.items.getAt(0).add(this.storyTable);
-            }
-        },
-
-        _loadStoryPoints: function() {
-            if (this.storyPointsTable === null) {
-                this.storyPointsTable = Ext.create('PepsiCo.app.sprintreport.StoryMetricStories', {
-                    labelColumnTitle: 'Story Points',
-                    valueColumnTitle: 'Value',
-                    store: Ext.create('Ext.data.Store', {
-                        model: 'Values',
-                        fields: ['metricType', 'metricValue'],
-                        data: [
-                            { 'metricType': '# Points Planned', 'metricValue': this.stories.storyPoints.toString() },
-                            { 'metricType': '# Points Added', 'metricValue': this.stories.storyPointsAdded.toString() },
-                            { 'metricType': '# Points Accepted', 'metricValue': this.stories.storyPointsAccepted.toString() },
-                            { 'metricType': '# Points Not Completed', 'metricValue': this.stories.storyPointsIncomplete.toString() },
-                            { 'metricType': '% Points Completed', 'metricValue': this.stories.storyPointsPercent.toString() + '%' }
-                        ]
-                    })
-                });
-                this.metricsRow.items.getAt(1).add(this.storyPointsTable);
-            }
-        },
-
-        _loadTaskHours: function() {
-
-            var plan = this.stories.plannedHours;
-            var todo = this.stories.todoHours;
-            var actual = this.stories.actualHours;
-
-            var percent = (plan === 0) ? 0.00 : Math.round((actual / plan) * 100);
-
-            if (this.tasksTable === null) {
-                this.tasksTable = Ext.create('PepsiCo.app.sprintreport.StoryMetricStories', {
-                    labelColumnTitle: 'Task Hours',
-                    valueColumnTitle: 'Value',
-                    store: Ext.create('Ext.data.Store', {
-                        model: 'Values',
-                        fields: ['metricType', 'metricValue'],
-                        data: [
-                            { 'metricType': 'Planned Task Hours', 'metricValue': plan.toString() },
-                            { 'metricType': 'To-Do Task Hours', 'metricValue': todo.toString() },
-                            { 'metricType': 'Actual Task Hours', 'metricValue': actual.toString() },
-                            { 'metricType': 'Actual/Planned', 'metricValue': percent.toString() + '%' }
-                        ]
-                    })
-                });
-                this.metricsRow.items.getAt(2).add(this.tasksTable);
-            }
+            this.metricsRow.setStore(this.stories);
+            this.metricsRow.loadStoryCounts();
+            this.metricsRow.loadStoryPoints();
+            this.metricsRow.loadTaskHours();
         }
-
     });
 })();

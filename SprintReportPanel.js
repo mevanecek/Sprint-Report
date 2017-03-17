@@ -72,6 +72,13 @@
         addFooter: function(footerRow) {
             this.down('#footerrow').removeAll();
             this.down('#footerrow').add(footerRow);
+        },
+
+        resetContents: function() {
+            this.down('#reportheader').removeAll();
+            this.down('#metricsrow').removeAll();
+            this.down('#chartsrow').removeAll();
+
         }
     });
 
