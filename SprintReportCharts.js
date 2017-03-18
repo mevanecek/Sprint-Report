@@ -50,7 +50,7 @@
                 var iters = [this.getIterationId()];
                 var iterBurn = Ext.create("PepsiCo.app.sprintreport.IterationBurndownPanel", {
                     iterations: iters,
-                    reportWidth: w,
+                    reportWidth: w*0.95,
                     reportHeight: w*1.15
                 });
                 iterBurn.loadChart();

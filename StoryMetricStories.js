@@ -32,7 +32,6 @@
                 flex: 1
             }
         ],
-        renderTo: Ext.getBody(),
 
         constructor: function(config) {
             this.mergeConfig(config);

@@ -9,9 +9,13 @@
         alias: 'widget.sprintreportpanel',
         cls: 'sprint-report',
 
+        plugins: [
+            {ptype: 'sprintreportprinting', pluginId: 'print', defaulTitle: 'Sprint Report'}
+        ],
+
         config: {
             store: undefined,
-            width: 1024
+//            width: 0
         },
 
         items: [{
@@ -50,34 +54,34 @@
         },
 
         addHeader: function(headerRow) {
-            this.down('#reportheader').removeAll();
+            this.down('#reportheader').removeAll(true);
             this.down('#reportheader').add(headerRow);
         },
 
         addMetrics: function(metricsRow) {
-            this.down('#metricsrow').removeAll();
+            this.down('#metricsrow').removeAll(true);
             this.down('#metricsrow').add(metricsRow);
         },
 
         addCharts: function(chartsRow) {
-            this.down('#chartsrow').removeAll();
+            this.down('#chartsrow').removeAll(true);
             this.down('#chartsrow').add(chartsRow);
         },
 
         addStories: function(storyGrid) {
-            this.down('#storiesrow').removeAll();
+            this.down('#storiesrow').removeAll(true);
             this.down('#storiesrow').add(storyGrid);
         },
 
         addFooter: function(footerRow) {
-            this.down('#footerrow').removeAll();
+            this.down('#footerrow').removeAll(true);
             this.down('#footerrow').add(footerRow);
         },
 
         resetContents: function() {
-            this.down('#reportheader').removeAll();
-            this.down('#metricsrow').removeAll();
-            this.down('#chartsrow').removeAll();
+            this.down('#reportheader').removeAll(true);
+            this.down('#metricsrow').removeAll(true);
+            this.down('#chartsrow').removeAll(true);
 
         }
     });

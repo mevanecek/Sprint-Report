@@ -35,10 +35,16 @@
       location = "group:SprintReport.html">
    </FileRef>
    <FileRef
+      location = "group:SprintReportPrint.js">
+   </FileRef>
+   <FileRef
       location = "group:Sprint-Report-Original.html">
    </FileRef>
    <FileRef
       location = "group:IterationBurndownPanel.js">
+   </FileRef>
+   <FileRef
+      location = "group:RallyExampleChart.js">
    </FileRef>
    <FileRef
       location = "group:ReleaseCfdPanel.js">

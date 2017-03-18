@@ -5,7 +5,7 @@
         extend: 'Ext.panel.Panel',
         alias: 'widget.sprintrepormetricsrow',
         cls: 'metricsRowPanel',
-        width: 915,
+//        width: 0,
         height: 190,
         title: "Sprint Metrics",
         border: 0,

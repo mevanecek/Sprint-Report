@@ -9,7 +9,9 @@
         config: {
             showPagingToolbar: false,
             showRowActionsColumn: false,
-            overflowY: 'auto',
+            autoScroll: false,
+            overflowY: false,
+            overflowX: 'hidden',
             editable: false,
             store: null,
             storeConfig: {
@@ -18,7 +20,7 @@
             sortableColumns: false,
             border: 2,
             columnLines: true,
-            width: 915,
+//            width: 0,
             bodyStyle: 'margin-bottom: 25px;',
             title: 'User Stories',
             columnCfgs: [
@@ -70,17 +72,18 @@
             ]
         },
         
-        plugins: [{
-            ptype: 'rallygridprintpage',
-            defaultTitle: 'Sprint Report',
-            gridSelector: 'sprintReportStoryTable'
-        }],
+//        plugins: [{
+//            ptype: 'rallygridprintpage',
+//            defaultTitle: 'Sprint Report',
+//            gridSelector: 'sprintReportStoryTable'
+//        }],
 
         constructor: function(config) {
             this.mergeConfig(config);
             this.initConfig(config);
-            this.callParent(arguments);
+            this.callParent(arguments, this.config);
         }
+
     });
 })();
 

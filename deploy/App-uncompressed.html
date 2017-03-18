@@ -8,6 +8,265 @@
     <script type="text/javascript">
         Rally.onReady(function () {
                 (function() {
+            
+            Ext.define('Rally.example.BurnCalculator', {
+                extend: 'Rally.data.lookback.calculator.TimeSeriesCalculator',
+                config: {
+                    completedScheduleStateNames: ['Accepted']
+                },
+            
+                constructor: function(config) {
+                    this.initConfig(config);
+                    this.callParent(arguments);
+                },
+            
+                getDerivedFieldsOnInput: function() {
+                    var completedScheduleStateNames = this.getCompletedScheduleStateNames();
+                    return [
+                        {
+                            "as": "Planned",
+                            "f": function(snapshot) {
+                                if (snapshot.PlanEstimate) {
+                                    return snapshot.PlanEstimate;
+                                }
+            
+                                return 0;
+                            }
+                        },
+                        {
+                            "as": "PlannedCompleted",
+                            "f": function(snapshot) {
+                                if (_.contains(completedScheduleStateNames, snapshot.ScheduleState) && snapshot.PlanEstimate) {
+                                    return snapshot.PlanEstimate;
+                                }
+            
+                                return 0;
+                            }
+                        }
+                    ];
+                },
+            
+                getMetrics: function() {
+                    return [
+                        {
+                            "field": "Planned",
+                            "as": "Planned",
+                            "display": "line",
+                            "f": "sum"
+                        },
+                        {
+                            "field": "PlannedCompleted",
+                            "as": "Completed",
+                            "f": "sum",
+                            "display": "column"
+                        }
+                    ];
+                }
+            });
+})();
+            
+ (function() {
+
+            Ext.define('Rally.example.BurnChart', {
+                extend: 'Rally.ui.chart.Chart',
+            
+                requires: [
+                    'Rally.example.BurnCalculator'
+                ],
+            
+                config: {
+                    piOid: undefined
+                },
+                
+                storeType: 'Rally.data.lookback.SnapshotStore',
+                storeConfig: undefined,
+                calculatorType: 'Rally.example.BurnCalculator',
+                calculatorConfig: {
+                    completedScheduleStateNames: ['Accepted', 'Released']
+                },
+                chartConfig: undefined,
+                
+                constructor: function(cfg) {
+                    Ext.apply(this.config, cfg);
+                    this.initConfig(cfg);
+                    this.callParent(arguments);
+                },
+            
+                initComponent: function() {
+                    this.storeConfig = this._getStoreConfig();
+                    this.chartConfig = this._getChartConfig();
+                },
+
+                /**
+                 * Generate the store config to retrieve all snapshots for all leaf child stories of the specified PI
+                 */
+                _getStoreConfig: function() {
+                    return {
+                        find: {
+                            _ItemHierarchy: this.getPiOid(),
+                            _TypeHierarchy: 'HierarchicalRequirement',
+                            Children: null
+                        },
+                        fetch: ['ScheduleState', 'PlanEstimate'],
+                        hydrate: ['ScheduleState'],
+                        sort: {
+                            _ValidFrom: 1
+                        },
+                        //context: this.getContext().getDataContext(),
+                        limit: Infinity
+                    };
+                },
+            
+                /**
+                 * Generate a valid Highcharts configuration object to specify the chart
+                 */
+                _getChartConfig: function() {
+                    return {
+                        chart: {
+                            defaultSeriesType: 'area',
+                            zoomType: 'xy'
+                        },
+                        title: {
+                            text: 'PI Burnup'
+                        },
+                        xAxis: {
+                            categories: [],
+                            tickmarkPlacement: 'on',
+                            tickInterval: 5,
+                            title: {
+                                text: 'Date',
+                                margin: 10
+                            }
+                        },
+                        yAxis: [
+                            {
+                                title: {
+                                    text: 'Points'
+                                }
+                            }
+                        ],
+                        tooltip: {
+                            formatter: function() {
+                                return '' + this.x + '<br />' + this.series.name + ': ' + this.y;
+                            }
+                        },
+                        plotOptions: {
+                            series: {
+                                marker: {
+                                    enabled: false,
+                                    states: {
+                                        hover: {
+                                            enabled: true
+                                        }
+                                    }
+                                },
+                                groupPadding: 0.01
+                            },
+                            column: {
+                                stacking: null,
+                                shadow: false
+                            }
+                        }
+                    };
+                }
+            });
+ })();
+
+                (function(){
+
+    var Ext = window.Ext4 || window.Ext;
+
+    /**
+     * Add print functionality to a Page component that supports the Sprint Report.
+     */
+    Ext.define('PepsiCo.app.sprintreport.plugin.SprintReportPrint', {
+        requires: ['Ext.XTemplate'],
+        extend: 'Rally.ui.plugin.print.Print',
+        alias: 'plugin.sprintreportprinting',
+
+        topToolbarTpl: Ext.create('Ext.Template',
+            '<div class="send-to-printer noprint">',
+            '<form>',
+            '<input type="button" align="right" value="Print Sprint Report"',
+            'onClick="window.print()">',
+            '</form>',
+            '</div>',
+            {
+                compiled: true
+            }
+        ),
+
+        footerTpl: Ext.create('Ext.Template',
+            '<div class="footer">',
+            '<div class="printed-by">Printed by {user}</div>',
+            '<div class="powered-by">Property of {company}</div>',
+            '</div>',
+            {
+                compiled: true
+            }
+        ),
+
+        init: function(component){
+            this.callParent(arguments);
+            this.component = component;
+        },
+
+        openPrintPage: function(printOptions){
+            this.printOptions = printOptions;
+            this.printWindow = window.open(Rally.environment.getServer().getContextUrl() + '/blank.html', 'printwindow',"scrollbars=yes");
+            //prevent new print windows from overwriting this one
+            this.printWindow.name = '';
+
+            this._waitForWindow(this.printWindow, Ext.bind(this._injectPageStructure, this));
+        },
+
+        _getHtmlContent: function(dom) {
+            var el = Ext.DomHelper.createDom({});
+            el.appendChild(Ext.clone(dom));
+            return el.innerHTML;
+        },
+
+        getContent: function() {
+            return this._getHtmlContent(this.component.getEl().dom);
+        },
+
+        getTopToolbar: function(){
+            return this.topToolbarTpl.apply();
+        },
+
+        getHeader: function() {
+            return '';
+        },
+
+        getFooter: function(){
+            var user = Rally.environment.getContext().getUser().getDisplayString();
+
+            return this.footerTpl.apply({
+                user: user,
+                company: 'PepsiCo, Inc'
+            });
+        },
+
+        _injectPageStructure: function(){
+            this._injectCSS();
+            this.printWindow.document.title = this.printOptions.title;
+
+            //i can haz scrollbars in IE?
+            if (Ext.isIE) {
+                this.printWindow.document.body.id = 'print-dialog-window';
+            }
+
+            this.getPageContent(function(html) {
+                this._injectContent(html, 'div', {
+                    'class': 'print-page'
+                });
+                // Ext.Function.defer(this._afterContentLoad, 500, this);
+            }, this);
+        },
+    });
+})();
+
+                (function() {
     var Ext = window.Ext4 || window.Ext;
 
     Ext.define('PepsiCo.app.sprintreport.IterationInfo', {
@@ -184,6 +443,7 @@
         }
     });
 })();
+
                 (function() {
     var Ext = window.Ext4 || window.Ext;
 
@@ -236,7 +496,7 @@
                 var iters = [this.getIterationId()];
                 var iterBurn = Ext.create("PepsiCo.app.sprintreport.IterationBurndownPanel", {
                     iterations: iters,
-                    reportWidth: w,
+                    reportWidth: w*0.95,
                     reportHeight: w*1.15
                 });
                 iterBurn.loadChart();
@@ -266,7 +526,7 @@
         extend: 'Ext.panel.Panel',
         alias: 'widget.sprintrepormetricsrow',
         cls: 'metricsRowPanel',
-        width: 915,
+//        width: 0,
         height: 190,
         title: "Sprint Metrics",
         border: 0,
@@ -406,7 +666,9 @@
         config: {
             showPagingToolbar: false,
             showRowActionsColumn: false,
-            overflowY: 'auto',
+            autoScroll: false,
+            overflowY: false,
+            overflowX: 'hidden',
             editable: false,
             store: null,
             storeConfig: {
@@ -415,7 +677,7 @@
             sortableColumns: false,
             border: 2,
             columnLines: true,
-            width: 915,
+//            width: 0,
             bodyStyle: 'margin-bottom: 25px;',
             title: 'User Stories',
             columnCfgs: [
@@ -467,17 +729,18 @@
             ]
         },
         
-        plugins: [{
-            ptype: 'rallygridprintpage',
-            defaultTitle: 'Sprint Report',
-            gridSelector: 'sprintReportStoryTable'
-        }],
+//        plugins: [{
+//            ptype: 'rallygridprintpage',
+//            defaultTitle: 'Sprint Report',
+//            gridSelector: 'sprintReportStoryTable'
+//        }],
 
         constructor: function(config) {
             this.mergeConfig(config);
             this.initConfig(config);
-            this.callParent(arguments);
+            this.callParent(arguments, this.config);
         }
+
     });
 })();
 
@@ -704,7 +967,6 @@
                 flex: 1
             }
         ],
-        renderTo: Ext.getBody(),
 
         constructor: function(config) {
             this.mergeConfig(config);
@@ -731,9 +993,13 @@
         alias: 'widget.sprintreportpanel',
         cls: 'sprint-report',
 
+        plugins: [
+            {ptype: 'sprintreportprinting', pluginId: 'print', defaulTitle: 'Sprint Report'}
+        ],
+
         config: {
             store: undefined,
-            width: 1024
+//            width: 0
         },
 
         items: [{
@@ -772,34 +1038,34 @@
         },
 
         addHeader: function(headerRow) {
-            this.down('#reportheader').removeAll();
+            this.down('#reportheader').removeAll(true);
             this.down('#reportheader').add(headerRow);
         },
 
         addMetrics: function(metricsRow) {
-            this.down('#metricsrow').removeAll();
+            this.down('#metricsrow').removeAll(true);
             this.down('#metricsrow').add(metricsRow);
         },
 
         addCharts: function(chartsRow) {
-            this.down('#chartsrow').removeAll();
+            this.down('#chartsrow').removeAll(true);
             this.down('#chartsrow').add(chartsRow);
         },
 
         addStories: function(storyGrid) {
-            this.down('#storiesrow').removeAll();
+            this.down('#storiesrow').removeAll(true);
             this.down('#storiesrow').add(storyGrid);
         },
 
         addFooter: function(footerRow) {
-            this.down('#footerrow').removeAll();
+            this.down('#footerrow').removeAll(true);
             this.down('#footerrow').add(footerRow);
         },
 
         resetContents: function() {
-            this.down('#reportheader').removeAll();
-            this.down('#metricsrow').removeAll();
-            this.down('#chartsrow').removeAll();
+            this.down('#reportheader').removeAll(true);
+            this.down('#metricsrow').removeAll(true);
+            this.down('#chartsrow').removeAll(true);
 
         }
     });
@@ -828,6 +1094,7 @@
         ],
         layout: {
             type: 'vbox',
+            align: 'center',
             pack: 'center'
         },
 
@@ -861,6 +1128,7 @@
             this.sprintReportPanel.addHeader(this.iterationInfoRow);
             this.sprintReportPanel.addMetrics(this.metricsRow);
             this.sprintReportPanel.addCharts(this.chartsRow);
+//            this._addPiChart();
         },
 
         /*********************************************************************************
@@ -896,10 +1164,9 @@
         _createPrintButton: function() {
             var me = this;
             var button = Ext.create('Rally.ui.Button', {
-                text: 'Print',
+                text: 'Prepare Report for Printing',
                 handler: this._printPage,
                 scope: me,
-                //                    plugins: [ { ptype: 'rallyprint', defaultTitle: 'Sprint Report'} ],
                 style: { float: 'right' }
             });
             this.down('#menubar').add(button);
@@ -927,16 +1194,7 @@
         },
 
         _printPage: function() {
-            //            var print = Ext.create('Rally.ui.plugin.print.Print', {
-            //                defaultTitle: 'Sprint Report'
-            //            });
-            //            print.setCmp(this);
-            //            print.openPrintPage();
-            console.log('This = %o\n', this);
-            console.log('HTML = \n%o\n', this.metricsRow.getEl().getHTML() + this.storyGrid.getEl().getHTML());
-            //            console.log('HTML = \n%o\n', document.documentElement.innerHTML);
-            //this.storyGrid.openPrintPage({ defaultTitle: 'Sprint Report' });
-            // window.print();
+            this.sprintReportPanel.openPrintPage({ defaultTitle: 'Sprint Report', title: 'Sprint Report' });
         },
         /*********************************************************************************
          * End Setup Menubar Section
@@ -948,7 +1206,6 @@
         // Create and add the metrics row
         _createMetricsRow: function() {
             this.metricsRow = Ext.create('PepsiCo.apps.sprintreport.SprintMetricsRow', { width: REPORT_WIDTH });
-            // this.down('#metricsrow').add(this.metricsRow);
         },
         /*********************************************************************************
          * End Setup Metrics Section
@@ -965,7 +1222,6 @@
                 margin: '0 0 15 0',
                 width: REPORT_WIDTH
             });
-            // this.iterationInfoRow = this.down('#reportheader').add(row);
         },
         /*********************************************************************************
          * End Setup Sprint Information
@@ -982,23 +1238,12 @@
                 margin: '0 0 15 0',
                 width: REPORT_WIDTH
             });
-            // this.down('#chartsrow').add(this.chartsRow);
         },
         /*********************************************************************************
          * End Setup Sprint charts
          *********************************************************************************/
 
         _loadStoryData: function() {
-            this.storyTable = null;
-            this.storyPointsTable = null;
-            this.tasksTable = null;
-
-            if (this.storyGrid) {
-                this.storyGrid.removeAll();
-                this.storyGrid.close();
-                this.remove(this.storyGrid);
-            }
-
             var me = this;
             this.stories = Ext.create('PepsiCo.app.sprintreport.StoryStore', {
                 listeners: {
@@ -1018,10 +1263,28 @@
         // Load the Story table
         _loadFeatureStoryTable: function() {
             var records = this.stories._getStoryRecordsStore();
-            //            gridConfig.store = records;
 
-            this.storyGrid = Ext.create('PepsiCo.app.sprintreport.StoryGrid', { store: records, width: REPORT_WIDTH });
-            // this.down('#storiesrow').add(grid);
+            this.storyGrid = Ext.create('PepsiCo.app.sprintreport.StoryGrid', {
+                store: records,
+                width: REPORT_WIDTH,
+                listeners: {
+                    viewready: function() {
+                                    var gH = this.storyGrid.getHeight();
+                                    var vH = this.storyGrid.getView().getHeight();
+//                                    console.log('grid height = ' + gH + ' and view height = ' + vH);
+
+                                    var h = (gH < vH) ? vH : gH;
+                                    this.storyGrid.getView().setHeight(h);
+//                                    this.storyGrid.setHeight(h+75);
+
+                                    gH = this.storyGrid.getHeight();
+                                    vH = this.storyGrid.getView().getHeight();
+//                                    console.log('grid height = ' + gH + ' and view height = ' + vH);
+                    },
+                    scope: this
+
+                }
+            });
             this.sprintReportPanel.addStories(this.storyGrid);
         },
 
@@ -1030,6 +1293,14 @@
             this.metricsRow.loadStoryCounts();
             this.metricsRow.loadStoryPoints();
             this.metricsRow.loadTaskHours();
+        },
+
+        _addPiChart: function() {
+            var pi = Ext.create('Rally.example.BurnChart', {
+                piOid: 61207323032
+            });
+            this.sprintReportPanel.addFooter(pi);
+            
         }
     });
 })();

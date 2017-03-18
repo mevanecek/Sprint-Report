@@ -20,6 +20,7 @@
         ],
         layout: {
             type: 'vbox',
+            align: 'center',
             pack: 'center'
         },
 
@@ -53,6 +54,7 @@
             this.sprintReportPanel.addHeader(this.iterationInfoRow);
             this.sprintReportPanel.addMetrics(this.metricsRow);
             this.sprintReportPanel.addCharts(this.chartsRow);
+//            this._addPiChart();
         },
 
         /*********************************************************************************
@@ -88,10 +90,9 @@
         _createPrintButton: function() {
             var me = this;
             var button = Ext.create('Rally.ui.Button', {
-                text: 'Print',
+                text: 'Prepare Report for Printing',
                 handler: this._printPage,
                 scope: me,
-                //                    plugins: [ { ptype: 'rallyprint', defaultTitle: 'Sprint Report'} ],
                 style: { float: 'right' }
             });
             this.down('#menubar').add(button);
@@ -119,16 +120,7 @@
         },
 
         _printPage: function() {
-            //            var print = Ext.create('Rally.ui.plugin.print.Print', {
-            //                defaultTitle: 'Sprint Report'
-            //            });
-            //            print.setCmp(this);
-            //            print.openPrintPage();
-            console.log('This = %o\n', this);
-            console.log('HTML = \n%o\n', this.metricsRow.getEl().getHTML() + this.storyGrid.getEl().getHTML());
-            //            console.log('HTML = \n%o\n', document.documentElement.innerHTML);
-            //this.storyGrid.openPrintPage({ defaultTitle: 'Sprint Report' });
-            // window.print();
+            this.sprintReportPanel.openPrintPage({ defaultTitle: 'Sprint Report', title: 'Sprint Report' });
         },
         /*********************************************************************************
          * End Setup Menubar Section
@@ -140,7 +132,6 @@
         // Create and add the metrics row
         _createMetricsRow: function() {
             this.metricsRow = Ext.create('PepsiCo.apps.sprintreport.SprintMetricsRow', { width: REPORT_WIDTH });
-            // this.down('#metricsrow').add(this.metricsRow);
         },
         /*********************************************************************************
          * End Setup Metrics Section
@@ -157,7 +148,6 @@
                 margin: '0 0 15 0',
                 width: REPORT_WIDTH
             });
-            // this.iterationInfoRow = this.down('#reportheader').add(row);
         },
         /*********************************************************************************
          * End Setup Sprint Information
@@ -174,23 +164,12 @@
                 margin: '0 0 15 0',
                 width: REPORT_WIDTH
             });
-            // this.down('#chartsrow').add(this.chartsRow);
         },
         /*********************************************************************************
          * End Setup Sprint charts
          *********************************************************************************/
 
         _loadStoryData: function() {
-            this.storyTable = null;
-            this.storyPointsTable = null;
-            this.tasksTable = null;
-
-            if (this.storyGrid) {
-                this.storyGrid.removeAll();
-                this.storyGrid.close();
-                this.remove(this.storyGrid);
-            }
-
             var me = this;
             this.stories = Ext.create('PepsiCo.app.sprintreport.StoryStore', {
                 listeners: {
@@ -210,10 +189,28 @@
         // Load the Story table
         _loadFeatureStoryTable: function() {
             var records = this.stories._getStoryRecordsStore();
-            //            gridConfig.store = records;
 
-            this.storyGrid = Ext.create('PepsiCo.app.sprintreport.StoryGrid', { store: records, width: REPORT_WIDTH });
-            // this.down('#storiesrow').add(grid);
+            this.storyGrid = Ext.create('PepsiCo.app.sprintreport.StoryGrid', {
+                store: records,
+                width: REPORT_WIDTH,
+                listeners: {
+                    viewready: function() {
+                                    var gH = this.storyGrid.getHeight();
+                                    var vH = this.storyGrid.getView().getHeight();
+//                                    console.log('grid height = ' + gH + ' and view height = ' + vH);
+
+                                    var h = (gH < vH) ? vH : gH;
+                                    this.storyGrid.getView().setHeight(h);
+//                                    this.storyGrid.setHeight(h+75);
+
+                                    gH = this.storyGrid.getHeight();
+                                    vH = this.storyGrid.getView().getHeight();
+//                                    console.log('grid height = ' + gH + ' and view height = ' + vH);
+                    },
+                    scope: this
+
+                }
+            });
             this.sprintReportPanel.addStories(this.storyGrid);
         },
 
@@ -222,6 +219,14 @@
             this.metricsRow.loadStoryCounts();
             this.metricsRow.loadStoryPoints();
             this.metricsRow.loadTaskHours();
+        },
+
+        _addPiChart: function() {
+            var pi = Ext.create('Rally.example.BurnChart', {
+                piOid: 61207323032
+            });
+            this.sprintReportPanel.addFooter(pi);
+            
         }
     });
 })();
